@@ -32,10 +32,13 @@ cd frontend
 ng serve
 ```
 4. Navigate to the `http://localhost:4200/editor` to interact with the current version of the editor.
-## Main concepts
+## Core concepts
 Traak's frontend is built using Angular, and uses the traak-editor library.
 This library contains two main components: 
 - `TraakEditorComponent` : The component that leverages ProseMirror modules to build the editor.
 - `WrapperComponent` : The component that wraps the editor in order to link it with external functionalities such as the menu. 
 
 The `TraakEditorComponent` creates the prosemirror view and passes a reference of it to the `WrapperComponent`. It also forwards dispatched transactions, enabling external components to interact with the editor.
+
+The `builtins` directory includes components essential for initializing the editor, such as ProseMirror commands, the ProseMirror schema, and the ProseMirror doc used as a starter document.
+
