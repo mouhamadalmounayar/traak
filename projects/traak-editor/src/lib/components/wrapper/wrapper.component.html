@@ -1,2 +1,5 @@
-<div #menuContainer class="empty menu-container"></div>
+<div class = "menu-container" [ngStyle]="{position : 'absolute' , 'top.px' : top , 'right.px' : right, 'left.px' : left}" *ngIf="this.currentTransaction && !this.currentTransaction.selection.empty">
+  <lib-menu [currentTransaction]="this.currentTransaction" [view]="this.view" (showInputChange)="handleInput($event)"></lib-menu>
+  <lib-input-container [view]="this.view" *ngIf="this.showInput" (showInputChange)="handleInput($event)"></lib-input-container>
+</div>
 <lib-traak-editor (transactionEvent)="getTransaction($event)" (viewEvent)="getView($event)"></lib-traak-editor>

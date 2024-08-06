@@ -1,4 +1,4 @@
-import {  Schema } from 'prosemirror-model';
+import { Schema } from 'prosemirror-model';
 
 export const schema = new Schema({
   nodes: {
@@ -45,6 +45,24 @@ export const schema = new Schema({
         return ['code', 0];
       },
       parseDOM: [{ tag: 'code' }],
+    },
+    link: {
+      attrs: {
+        href: {},
+      },
+      inclusive: false,
+      toDOM(node) {
+        const {href} = node.attrs
+        return ['a', {href} , 0];
+      },
+      parseDOM: [
+        {
+          tag: 'a[href]',
+          getAttrs(dom) {
+            return { href: dom.getAttribute('href') };
+          },
+        },
+      ],
     },
   },
 });
