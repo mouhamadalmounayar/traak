@@ -28,6 +28,9 @@ export class MenuComponent implements OnChanges {
     new EventEmitter<boolean>();
   hasBold: boolean = false;
   hasLink: boolean = false;
+  hasStrikethrough: boolean = false;
+  hasItalic: boolean = false;
+  hasCode: boolean = false;
 
   ngOnChanges() {
     this.updateMarks();
@@ -48,6 +51,33 @@ export class MenuComponent implements OnChanges {
       hasMark(
         this.currentTransaction.doc,
         traakSchema.marks.link,
+        this.currentTransaction.selection.from,
+        this.currentTransaction.selection.to,
+      );
+
+    this.hasCode =
+      this.currentTransaction != null &&
+      hasMark(
+        this.currentTransaction.doc,
+        traakSchema.marks.code,
+        this.currentTransaction.selection.from,
+        this.currentTransaction.selection.to,
+      );
+
+    this.hasStrikethrough =
+      this.currentTransaction != null &&
+      hasMark(
+        this.currentTransaction.doc,
+        traakSchema.marks.strikethrough,
+        this.currentTransaction.selection.from,
+        this.currentTransaction.selection.to,
+      );
+
+    this.hasItalic =
+      this.currentTransaction != null &&
+      hasMark(
+        this.currentTransaction.doc,
+        traakSchema.marks.italic,
         this.currentTransaction.selection.from,
         this.currentTransaction.selection.to,
       );
