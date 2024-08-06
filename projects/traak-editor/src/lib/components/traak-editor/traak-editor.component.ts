@@ -56,6 +56,7 @@ export class TraakEditorComponent implements AfterViewInit {
           const newState = view.state.apply(tr);
           this.transactionEvent.emit(tr);
           view.updateState(newState);
+          this.viewEvent.emit(view);
         },
         plugins: [
           keymap({
@@ -65,7 +66,6 @@ export class TraakEditorComponent implements AfterViewInit {
           }),
         ],
       });
-      this.viewEvent.emit(view);
     }
   }
 
