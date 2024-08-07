@@ -12,11 +12,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './input-container.component.css',
 })
 export class InputContainerComponent {
-  showInput = false;
   @Input() view?: EditorView;
   @Output() showInputChange: EventEmitter<boolean> =
     new EventEmitter<boolean>();
-  inputValue: string = ' ';
+  inputValue: string = '';
 
   handleEnter($event: KeyboardEvent) {
     if ($event.key === 'Enter') {
@@ -31,6 +30,6 @@ export class InputContainerComponent {
   }
 
   handleClose() {
-    this.showInput = false;
+    this.showInputChange.emit(false);
   }
 }

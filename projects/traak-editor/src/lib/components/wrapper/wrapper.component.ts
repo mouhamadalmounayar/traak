@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   OnChanges,
+  OnDestroy,
   Renderer2,
   SimpleChanges,
   ViewChild,
@@ -36,7 +37,6 @@ export class WrapperComponent {
   view?: EditorView;
   currentTransaction?: Transaction;
   showInput: boolean = false;
-
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -62,11 +62,11 @@ export class WrapperComponent {
         selection.to >= 0 &&
         selection.to <= docSize
       ) {
-        const coords = this.view?.coordsAtPos(selection.from - 1);
+        const coords = this.view?.coordsAtPos(selection.from);
         if (coords) {
           this.right = coords.right;
           this.left = coords.right;
-          this.top = coords.top - 40;
+          this.top = coords.top - 30;
         }
       }
     }

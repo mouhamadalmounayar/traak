@@ -21,7 +21,6 @@ import { hasMark } from '../../utils';
   styleUrl: './menu.component.css',
 })
 export class MenuComponent implements OnChanges {
-  showMenu: boolean = true;
   @Input() currentTransaction?: Transaction;
   @Input() view?: EditorView;
   @Output() showInputChange: EventEmitter<boolean> =
@@ -121,7 +120,6 @@ export class MenuComponent implements OnChanges {
       return;
     }
     $event.preventDefault();
-    this.showMenu = false;
     this.showInputChange.emit(true);
   }
 }
