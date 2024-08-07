@@ -1,17 +1,13 @@
-.menu-container{
-  position: absolute;
-  width : 150px;
+.input-container {
+  font-size: 10px !important;
+  font-family: "Segoe UI Regular";
+  color: #3C3C3C;
+  border: 1px solid #E5E5E5;
+  padding: 5px;
+  border-radius: 5px;
+  width: 150px;
   background-color : white;
-  z-index: 1;
-  transition : all ease 0.15s;
-  transform : scale(1);
-  opacity : 1;
-  border-radius : 5px;
-  padding : 3px;
-  border : 1px solid #E5E5E5;
-  @starting-style{
-    opacity:0;
-    transform: scale(1.1)
-  }
 }
+
+
 

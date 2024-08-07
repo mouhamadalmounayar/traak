@@ -1,0 +1,50 @@
+.menu {
+  width: 150px;
+  background-color: white;
+  z-index: 1;
+  transition: all ease 0.15s;
+  transform: scale(1);
+  opacity: 1;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid #E5E5E5;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  @starting-style{
+    opacity: 0;
+    transform: scale(1.1)
+  }
+}
+
+.menu-element {
+  cursor: pointer;
+  border: none;
+  font-size: 10px;
+  color: #4b5563;
+  border-radius: 3px;
+  transition: all ease 0.15s;
+  background: none;
+}
+
+.menu-element:hover {
+  background-color: #f3f4f6;
+  border-radius: 3px;
+  transition: all ease 0.15s;
+}
+
+.menu-element:active {
+  color: #cbd5e1;
+  transition: all ease 0.15s;
+}
+
+.clicked:hover, .clicked path,
+.clicked:hover, .clicked line {
+  stroke: #1d4ed8;
+}
+.clicked, .clicked:hover {
+  color: #1d4ed8;
+  background-color: #eff6ff;
+  transition: all ease 0.15s;
+}
+

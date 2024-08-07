@@ -8,7 +8,7 @@
 .ProseMirror {
   font-family: "Segoe UI Regular", sans-serif !important;
   font-size: 13px !important;
-  color : #3C3C3C !important;
+  color: #3C3C3C;
   width: 50vw;
   white-space: normal;
   word-wrap: break-word;
@@ -20,13 +20,6 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   position: relative;
-}
-
-.add-button {
-  position: absolute;
-  top: 0;
-  left: -64px;
-  transition: all ease 0.15s;
 }
 
 .empty {
@@ -41,45 +34,9 @@ code {
   border-radius: 3px;
 }
 
-/*menu*/
-.menu {
-  display: flex;
-  flex-direction: row;
-  gap : 5px;
-}
-
-.menu-element {
+a {
   cursor: pointer;
-  border: none;
-  background: none;
-  font-size: 10px;
-  color: #4b5563;
-  border-radius: 3px;
-  transition: all ease 0.15s;
 }
-
-.menu-element:hover {
-  background-color: #f3f4f6;
-  border-radius: 3px;
-  transition: all ease 0.15s;
-}
-
-.menu-element:active {
-  background-color: #f8fafc;
-  color: #cbd5e1;
-  transition: all ease 0.15s;
-}
-
-.clicked:hover, .clicked path,
-.clicked:hover, .clicked line {
-  stroke: #1d4ed8;
-}
-.clicked, .clicked:hover {
-  color: #1d4ed8;
-  background-color: #eff6ff;
-  transition: all ease 0.15s;
-}
-
 
 @font-face {
   font-family: "Inter Regular";
@@ -87,6 +44,6 @@ code {
 }
 
 @font-face {
-  font-family : "Segoe UI Regular";
+  font-family: "Segoe UI Regular";
   src: url('./assets/fonts/SegoeUI/Segoe UI.ttf')
 }
