@@ -3,7 +3,8 @@
   width: 90%;
   font-family: "Segoe UI Regular";
   font-size: 10px !important;
-  padding : 0
+  padding: 0;
+  margin-left: 5px;
 }
 
 .input-link:focus-visible {
@@ -14,13 +15,12 @@ button {
   background: none;
   border: none;
   cursor: pointer;
-
 }
 
 .container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   font-family: "Segoe UI Regular";
   font-size: 10px !important;
 }

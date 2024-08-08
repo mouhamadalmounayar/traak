@@ -1,12 +1,8 @@
-/* eslint-disable */
 import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  OnChanges,
-  OnDestroy,
   Renderer2,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { EditorView } from 'prosemirror-view';
