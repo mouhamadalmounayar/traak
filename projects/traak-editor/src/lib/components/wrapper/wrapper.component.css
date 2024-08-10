@@ -10,5 +10,42 @@
   background-color: white;
 }
 
+.menu-container {
+  transition: all ease 0.15s;
+  opacity: 1;
+}
+
+.add-button {
+  border: none;
+  color: #1d4ed8;;
+  background: none;
+}
+
+.add-button:hover {
+  background-color: #eff6ff;
+  border-radius: 3px;
+  transition: all ease 0.15s;
+  cursor: pointer;
+}
+
+.block-menu-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 50px;
+  height: 20px;
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all ease 0.15s;
+}
+
+.visible {
+  opacity: 1;
+  transition: all ease 0.15s
+}
 
 

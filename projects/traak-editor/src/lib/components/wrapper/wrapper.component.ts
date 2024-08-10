@@ -9,8 +9,16 @@ import { EditorView } from 'prosemirror-view';
 import { Transaction } from 'prosemirror-state';
 import { TraakEditorComponent } from '../traak-editor/traak-editor.component';
 import { MenuComponent } from '../menu/menu.component';
-import { NgIf, NgStyle } from '@angular/common';
+import { NgClass, NgIf, NgStyle } from '@angular/common';
 import { InputContainerComponent } from '../input-container/input-container.component';
+import { buttonAppear } from '../../animations/button.animation';
+
+type Coordinates = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
 
 @Component({
   selector: 'lib-wrapper',
@@ -21,9 +29,11 @@ import { InputContainerComponent } from '../input-container/input-container.comp
     NgIf,
     NgStyle,
     InputContainerComponent,
+    NgClass,
   ],
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.css'],
+  animations: [buttonAppear],
 })
 export class WrapperComponent {
   @ViewChild('#menu', { static: true }) menuContainer!: ElementRef;
@@ -33,6 +43,17 @@ export class WrapperComponent {
   view?: EditorView;
   currentTransaction?: Transaction;
   showInput: boolean = false;
+  showBlockMenu: boolean = false;
+  hoveringMenu: boolean = false;
+  blockMenuCoordinates?: Coordinates;
+
+  get classes() {
+    return {
+      visible: this.showBlockMenu || this.hoveringMenu,
+      hidden: !this.showBlockMenu && !this.hoveringMenu,
+    };
+  }
+
   constructor(
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -70,5 +91,25 @@ export class WrapperComponent {
 
   handleInput($event: boolean) {
     this.showInput = $event;
+  }
+
+  handleNodeHover($event: CustomEvent) {
+    this.showBlockMenu = true;
+    this.blockMenuCoordinates = $event.detail.dims;
+  }
+
+  handleMenuHover($event: MouseEvent) {
+    $event.preventDefault();
+    this.hoveringMenu = true;
+  }
+
+  handleMenuOut($event: MouseEvent) {
+    $event.preventDefault();
+    this.hoveringMenu = false;
+  }
+
+  handleNodeOut($event: CustomEvent) {
+    $event.preventDefault();
+    this.showBlockMenu = false;
   }
 }

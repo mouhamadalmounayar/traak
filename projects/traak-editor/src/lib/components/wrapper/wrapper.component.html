@@ -1,7 +1,27 @@
-<div class = "menu-container" [ngStyle]="{position : 'absolute' , 'top.px' : top , 'right.px' : right, 'left.px' : left}" *ngIf="this.currentTransaction && !this.currentTransaction.selection.empty && !this.showInput">
-  <lib-menu [currentTransaction]="this.currentTransaction" [view]="this.view" (showInputChange)="handleInput($event)"></lib-menu>
+<div class="menu-container" @buttonAppear
+     [ngStyle]="{position: 'absolute', 'top.px': top, 'right.px': right, 'left.px': left}"
+     *ngIf="currentTransaction && !currentTransaction.selection.empty && !showInput">
+  <lib-menu [currentTransaction]="currentTransaction" [view]="view" (showInputChange)="handleInput($event)"></lib-menu>
 </div>
-<div class="input-container"  *ngIf="this.showInput" [ngStyle]="{position : 'absolute' , 'top.px' : top , 'right.px' : right, 'left.px' : left}">
-  <lib-input-container [view]="this.view" (showInputChange)="handleInput($event)"></lib-input-container>
+
+<div class="input-container"
+     *ngIf="showInput"
+     [ngStyle]="{position: 'absolute', 'top.px': top, 'right.px': right, 'left.px': left}">
+  <lib-input-container [view]="view" (showInputChange)="handleInput($event)"></lib-input-container>
 </div>
-<lib-traak-editor (transactionEvent)="getTransaction($event)" (viewEvent)="getView($event)"></lib-traak-editor>
+
+<lib-traak-editor class="editor"
+                  (nodeHoverEvent)="handleNodeHover($event)"
+                  (nodeOutEvent)="handleNodeOut($event)"
+                  (transactionEvent)="getTransaction($event)"
+                  (viewEvent)="getView($event)">
+</lib-traak-editor>
+
+<div class="block-menu-container" (mouseenter)="handleMenuHover($event)"
+     (mouseleave)="handleMenuOut($event)" *ngIf="blockMenuCoordinates"
+     [ngStyle]="{position: 'absolute', 'top.px': blockMenuCoordinates.top, 'left.px': blockMenuCoordinates.left - 50}">
+  <button class="add-button" @buttonAppear
+          [ngClass]="classes">
+    +
+  </button>
+</div>
