@@ -1,20 +1,34 @@
 import { Plugin } from 'prosemirror-state';
+
 export const hoverPlugin = new Plugin({
   props: {
     handleDOMEvents: {
       mouseover(view, event) {
-        const { $from } = view.state.selection;
-        const node = view.state.doc.nodeAt($from.pos);
-        if (node) {
-          const { target } = event;
-          console.log('dispatching');
-          target?.dispatchEvent(
-            new CustomEvent('nodeHover', {
-              detail: { Node: node, pos: $from.pos },
-            }),
-          );
+        const target = event.target as HTMLElement;
+        const posInDom = view.posAtDOM(target, 0);
+        const $posInDom = view.state.doc.resolve(posInDom);
+        if ($posInDom.pos === 0) {
+          return;
         }
-        return false;
+        if ($posInDom.parent.type.name === 'doc_title') {
+          return;
+        }
+        const start = $posInDom.start();
+        const dims = view.coordsAtPos(start);
+        target.dispatchEvent(
+          new CustomEvent('nodeHover', {
+            bubbles: true,
+            detail: { dims: dims },
+          }),
+        );
+      },
+      mouseout(view, event) {
+        const target = event.target as HTMLElement;
+        target.dispatchEvent(
+          new CustomEvent('nodeOut', {
+            bubbles: true,
+          }),
+        );
       },
     },
   },
