@@ -1,7 +1,10 @@
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { chainCommands } from 'prosemirror-commands';
 
-export function addLine(state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) {
+export function addLine(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
   const { schema, selection } = state;
   const { $from } = selection;
   const lineNode = schema.nodes['line'].create();
@@ -17,7 +20,10 @@ export function addLine(state: EditorState, dispatch: ((tr: Transaction) => void
   return false;
 }
 
-export function addLineFromTitle(state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) {
+export function addLineFromTitle(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
   const { schema, selection } = state;
   const { $from } = selection;
   if ($from.node().type.name === 'doc_title') {
@@ -49,7 +55,10 @@ export function addLineFromTitle(state: EditorState, dispatch: ((tr: Transaction
   return false;
 }
 
-export function removeLineNode(state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) {
+export function removeLineNode(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
   const { selection } = state;
   const { $from, $to } = selection;
   const currNode = $from.doc.nodeAt($from.pos);
@@ -66,20 +75,21 @@ export function removeLineNode(state: EditorState, dispatch: ((tr: Transaction) 
   return false;
 }
 
-export function joinTwoLines(state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) {
+export function joinTwoLines(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
   const { selection } = state;
   const { $from, $to } = selection;
   // if the cursor is at the beginning and the line is not empty. We join the line with the one before.
   if ($from.pos === $to.pos && $from.pos === $from.before() + 1) {
     const nodeBefore = $from.doc.resolve($from.before()).nodeBefore;
     if (
-      nodeBefore && (
-      nodeBefore.type.name === 'doc_title' ||
-      nodeBefore.type.name === 'line'
-      )
+      nodeBefore &&
+      (nodeBefore.type.name === 'doc_title' || nodeBefore.type.name === 'line')
     ) {
       const currNode = $from.doc.nodeAt($from.pos);
-      if (currNode && currNode.text){
+      if (currNode && currNode.text) {
         const tr = state.tr
           .delete($from.pos, $from.pos + currNode.nodeSize)
           .insertText(currNode.text, $from.pos - 2);
@@ -92,7 +102,10 @@ export function joinTwoLines(state: EditorState, dispatch: ((tr: Transaction) =>
   return false;
 }
 
-export function removeSelection(state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) {
+export function removeSelection(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
   // if we want to remove a selection.
   const { selection } = state;
   const { $from, $to } = selection;
@@ -104,7 +117,10 @@ export function removeSelection(state: EditorState, dispatch: ((tr: Transaction)
   return false;
 }
 
-export function defaultRemove(state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) {
+export function defaultRemove(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
   const { selection } = state;
   const { $from, $to } = selection;
   if ($from.pos === $to.pos) {

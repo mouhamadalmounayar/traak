@@ -3,7 +3,9 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Output,
+  Renderer2,
 } from '@angular/core';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Node } from 'prosemirror-model';
@@ -18,21 +20,30 @@ import {
 import { keymap } from 'prosemirror-keymap';
 import { toggleMark } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
-import {BOLD, CODE, ITALIC, STRIKETHROUGH} from '../../builtins/inputRules/regexExp';
+import {
+  BOLD,
+  CODE,
+  ITALIC,
+  STRIKETHROUGH,
+} from '../../builtins/inputRules/regexExp';
 import { markInputRule } from '../../builtins/inputRules';
+import { hoverPlugin } from '../../builtins/plugins';
 
 @Component({
   selector: 'lib-traak-editor',
   standalone: true,
   imports: [],
-  template: ` <div #editor></div> `,
-  styles: ``,
+  template: ` <div #editor class="outlined"></div> `,
+  styles: '',
 })
 export class TraakEditorComponent implements AfterViewInit {
   @ViewChild('editor') editor?: ElementRef;
   @Output() viewEvent = new EventEmitter<EditorView>();
   @Output() transactionEvent = new EventEmitter<Transaction>();
+  @Output() nodeHoverEvent = new EventEmitter();
+  @Output() nodeOutEvent = new EventEmitter();
 
+  constructor(private renderer: Renderer2) {}
 
   initializeEditor(): void {
     const schema = traakSchema;
@@ -45,7 +56,7 @@ export class TraakEditorComponent implements AfterViewInit {
               markInputRule(BOLD, schema.marks.bold),
               markInputRule(ITALIC, schema.marks.italic),
               markInputRule(STRIKETHROUGH, schema.marks.strikethrough),
-              markInputRule(CODE, schema.marks.code)
+              markInputRule(CODE, schema.marks.code),
             ],
           }),
         ],
@@ -59,6 +70,7 @@ export class TraakEditorComponent implements AfterViewInit {
           this.viewEvent.emit(view);
         },
         plugins: [
+          hoverPlugin,
           keymap({
             Enter: basicTraakAddCommands,
             Backspace: basicTraakRemoveCommands,
@@ -71,5 +83,15 @@ export class TraakEditorComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.initializeEditor();
+  }
+
+  @HostListener('nodeHover', ['$event'])
+  handleNodeHover($event: CustomEvent) {
+    this.nodeHoverEvent.emit($event);
+  }
+
+  @HostListener('nodeOut', ['$event'])
+  handleNodeOut($event: CustomEvent) {
+    this.nodeOutEvent.emit($event);
   }
 }
