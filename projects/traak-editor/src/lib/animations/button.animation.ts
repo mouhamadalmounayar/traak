@@ -6,3 +6,6 @@ export const buttonAppear = trigger('buttonAppear', [
     animate('0.3s ease', style({ opacity: 1, transform: 'translateY(0)' })),
   ]),
 ]);
+
+
+

@@ -1,3 +1,11 @@
+:root{
+--border-color: #E5E5E5;
+--basic-gray: #4b5563;
+--hover-gray: #f3f4f6;
+--basic-blue: #1d4ed8;
+--hover-blue: #eff6ff;
+}
+
 .input-container {
   font-size: 10px !important;
   font-family: "Segoe UI Regular";
@@ -17,12 +25,16 @@
 
 .add-button {
   border: none;
-  color: #1d4ed8;;
+  color: var(--basic-blue);
   background: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .add-button:hover {
-  background-color: #eff6ff;
+  background-color: var(--hover-blue);
   border-radius: 3px;
   transition: all ease 0.15s;
   cursor: pointer;

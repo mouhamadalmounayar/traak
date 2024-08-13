@@ -7,7 +7,7 @@
   opacity: 1;
   border-radius: 5px;
   padding: 3px;
-  border: 1px solid #E5E5E5;
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -18,7 +18,7 @@
   cursor: pointer;
   border: none;
   font-size: 10px;
-  color: #4b5563;
+  color: var(--basic-gray);
   border-radius: 3px;
   transition: all ease 0.15s;
   background: none;
@@ -29,7 +29,7 @@
 }
 
 .menu-element:hover {
-  background-color: #f3f4f6;
+  background-color: var(--hover-gray);
   border-radius: 3px;
   transition: all ease 0.15s;
 }
@@ -41,12 +41,13 @@
 
 .clicked:hover, .clicked path,
 .clicked:hover, .clicked line {
-  stroke: #1d4ed8;
+  stroke: var(--basic-blue);
+
 }
 
 .clicked, .clicked:hover {
   color: #1d4ed8;
-  background-color: #eff6ff;
+  background-color: var(--hover-blue);
   transition: all ease 0.15s;
 }
 

@@ -4,6 +4,7 @@ import {
   ElementRef,
   Renderer2,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { EditorView } from 'prosemirror-view';
 import { Transaction } from 'prosemirror-state';
@@ -34,6 +35,7 @@ type Coordinates = {
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.css'],
   animations: [buttonAppear],
+  encapsulation: ViewEncapsulation.None
 })
 export class WrapperComponent {
   @ViewChild('#menu', { static: true }) menuContainer!: ElementRef;

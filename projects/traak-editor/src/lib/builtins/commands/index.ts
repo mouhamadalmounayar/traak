@@ -5,7 +5,7 @@ export function addLine(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  const { schema, selection } = state;
+  const { schema, selection }  = state;
   const { $from } = selection;
   const lineNode = schema.nodes['line'].create();
   if (lineNode) {

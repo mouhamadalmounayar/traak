@@ -2,9 +2,12 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/traak-editor",
   "lib": {
-    "entryFile": "src/public-api.ts", 
+    "entryFile": "src/public-api.ts",
     "styleIncludePaths": [
       "src/lib"
     ]
-  }
+  },
+  "assets" : [
+    "src/styles.css"
+  ]
 }
