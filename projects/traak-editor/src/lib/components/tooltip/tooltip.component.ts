@@ -14,13 +14,13 @@ import { Transaction } from 'prosemirror-state';
 import { hasMark } from '../../utils';
 
 @Component({
-  selector: 'lib-menu',
+  selector: 'tooltip',
   standalone: true,
   imports: [NgIf, FormsModule, NgOptimizedImage, NgClass],
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css',
+  templateUrl: './tooltip.component.html',
+  styleUrl: './tooltip.component.css',
 })
-export class MenuComponent implements OnChanges {
+export class ToolTipComponent implements OnChanges {
   @Input() currentTransaction?: Transaction;
   @Input() view?: EditorView;
   @Output() showInputChange: EventEmitter<boolean> =

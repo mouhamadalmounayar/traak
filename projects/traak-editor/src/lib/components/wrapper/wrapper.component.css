@@ -1,16 +1,16 @@
-:root{
---border-color: #E5E5E5;
---basic-gray: #4b5563;
---hover-gray: #f3f4f6;
---basic-blue: #1d4ed8;
---hover-blue: #eff6ff;
+:root {
+  --border-color: #e5e5e5;
+  --basic-gray: #4b5563;
+  --hover-gray: #f3f4f6;
+  --basic-blue: #1d4ed8;
+  --hover-blue: #eff6ff;
 }
 
 .input-container {
   font-size: 10px !important;
   font-family: "Segoe UI Regular";
-  color: #3C3C3C;
-  border: 1px solid #E5E5E5;
+  color: #3c3c3c;
+  border: 1px solid #e5e5e5;
   padding: 5px;
   border-radius: 5px;
   width: 200px;
@@ -18,7 +18,7 @@
   background-color: white;
 }
 
-.menu-container {
+.tooltip-container {
   transition: all ease 0.15s;
   opacity: 1;
 }
@@ -40,7 +40,7 @@
   cursor: pointer;
 }
 
-.block-menu-container {
+.add-button-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -57,7 +57,5 @@
 
 .visible {
   opacity: 1;
-  transition: all ease 0.15s
+  transition: all ease 0.15s;
 }
-
-

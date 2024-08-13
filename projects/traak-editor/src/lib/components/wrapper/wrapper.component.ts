@@ -1,15 +1,8 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Renderer2,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { EditorView } from 'prosemirror-view';
 import { Transaction } from 'prosemirror-state';
 import { TraakEditorComponent } from '../traak-editor/traak-editor.component';
-import { MenuComponent } from '../menu/menu.component';
+import { ToolTipComponent } from '../tooltip/tooltip.component';
 import { NgClass, NgIf, NgStyle } from '@angular/common';
 import { InputContainerComponent } from '../input-container/input-container.component';
 import { buttonAppear } from '../../animations/button.animation';
@@ -26,7 +19,7 @@ type Coordinates = {
   standalone: true,
   imports: [
     TraakEditorComponent,
-    MenuComponent,
+    ToolTipComponent,
     NgIf,
     NgStyle,
     InputContainerComponent,
@@ -35,31 +28,28 @@ type Coordinates = {
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.css'],
   animations: [buttonAppear],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class WrapperComponent {
-  @ViewChild('#menu', { static: true }) menuContainer!: ElementRef;
   right?: number;
   left?: number;
   top?: number;
   view?: EditorView;
   currentTransaction?: Transaction;
   showInput: boolean = false;
-  showBlockMenu: boolean = false;
-  hoveringMenu: boolean = false;
+  showToolTip: boolean = false;
+  hoveringToolTip: boolean = false;
   blockMenuCoordinates?: Coordinates;
+  showMenu: boolean = false;
 
   get classes() {
     return {
-      visible: this.showBlockMenu || this.hoveringMenu,
-      hidden: !this.showBlockMenu && !this.hoveringMenu,
+      visible: this.showToolTip || this.hoveringToolTip,
+      hidden: !this.showToolTip && !this.hoveringToolTip,
     };
   }
 
-  constructor(
-    private renderer: Renderer2,
-    private cdr: ChangeDetectorRef,
-  ) {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   getView(view: EditorView) {
     this.view = view;
@@ -96,22 +86,27 @@ export class WrapperComponent {
   }
 
   handleNodeHover($event: CustomEvent) {
-    this.showBlockMenu = true;
+    this.showToolTip = true;
     this.blockMenuCoordinates = $event.detail.dims;
   }
 
   handleMenuHover($event: MouseEvent) {
     $event.preventDefault();
-    this.hoveringMenu = true;
+    this.hoveringToolTip = true;
   }
 
   handleMenuOut($event: MouseEvent) {
     $event.preventDefault();
-    this.hoveringMenu = false;
+    this.hoveringToolTip = false;
   }
 
   handleNodeOut($event: CustomEvent) {
     $event.preventDefault();
-    this.showBlockMenu = false;
+    this.showToolTip = false;
+  }
+
+  handleMenuButtonClick($event: MouseEvent): void {
+    $event.preventDefault();
+    this.showMenu = true;
   }
 }

@@ -1,11 +1,12 @@
 import { traakStarter } from '../src/lib/builtins/starters';
 import { traakSchema } from '../src/lib/builtins/schemas';
-
-import { addLine, addLineFromTitle, joinTwoLines } from '../src/lib/builtins/commands';
+import {
+  addLine,
+  addLineFromTitle,
+  joinTwoLines,
+} from '../src/lib/builtins/commands';
 import { TextSelection, Transaction } from 'prosemirror-state';
-import {createState} from "./test-utils";
-
-
+import { createState } from './test-utils';
 
 describe('test addLineFromTitle', () => {
   it('if there is a next line, cursor hops to the beginning of the next line', async () => {
@@ -98,4 +99,5 @@ describe('test join lines', () => {
     );
   });
 });
+
 // add tests for the rest of the commands.
