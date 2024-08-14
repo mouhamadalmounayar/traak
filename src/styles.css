@@ -8,7 +8,7 @@
 .ProseMirror {
   font-family: "Segoe UI Regular", sans-serif !important;
   font-size: 13px !important;
-  color: #3C3C3C;
+  color: #3c3c3c;
   width: 50vw;
   white-space: normal;
   word-wrap: break-word;
@@ -45,5 +45,10 @@ a {
 
 @font-face {
   font-family: "Segoe UI Regular";
-  src: url('./assets/fonts/SegoeUI/Segoe UI.ttf')
+  src: url("./assets/fonts/SegoeUI/Segoe UI.ttf");
+}
+
+@font-face {
+  font-family: "Segoe UI Bold";
+  src: url("./assets/fonts/SegoeUI/Segoe\ UI\ Bold.ttf");
 }

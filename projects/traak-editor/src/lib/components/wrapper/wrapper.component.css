@@ -4,6 +4,9 @@
   --hover-gray: #f3f4f6;
   --basic-blue: #1d4ed8;
   --hover-blue: #eff6ff;
+
+  --tooltip-width: 150px;
+  --menu-width: 100px;
 }
 
 .input-container {
@@ -49,13 +52,23 @@
   height: 20px;
 }
 
-.hidden {
+.add-button__hidden {
   opacity: 0;
   transform: translateX(-10px);
   transition: all ease 0.15s;
 }
 
-.visible {
+.add-button__visible {
+  opacity: 1;
+  transition: all ease 0.15s;
+}
+
+.menu__hidden {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.menu__visible {
   opacity: 1;
   transition: all ease 0.15s;
 }

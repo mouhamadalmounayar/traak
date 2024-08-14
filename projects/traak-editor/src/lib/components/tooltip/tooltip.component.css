@@ -1,5 +1,5 @@
 .tooltip {
-  width: 150px;
+  width: var(--tooltip-width);
   background-color: white;
   z-index: 1;
   transition: all ease 0.15s;

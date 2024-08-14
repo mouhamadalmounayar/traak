@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 10px;
+  background-color: white;
+  font-size: 10px !important;
+  width: var(--menu-width);
+}
+
+.menu-element {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  padding: 5px;
+  font-family: "Segoe UI Bold";
+  color: var(--basic-gray);
+  transition: all ease 0.15s;
+  border-radius: 3px;
+}
+
+.menu-element:hover {
+  background-color: var(--hover-gray);
+  transition: all ease 0.15s;
+}
