@@ -14,11 +14,12 @@ export const hoverPlugin = new Plugin({
           return;
         }
         const start = $posInDom.start();
+        const node = $posInDom.parent;
         const dims = view.coordsAtPos(start);
         target.dispatchEvent(
           new CustomEvent('nodeHover', {
             bubbles: true,
-            detail: { dims: dims },
+            detail: { dims: dims, node: node, start: start },
           }),
         );
       },

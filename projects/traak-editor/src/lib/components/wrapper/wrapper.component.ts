@@ -6,7 +6,8 @@ import { ToolTipComponent } from '../tooltip/tooltip.component';
 import { NgClass, NgIf, NgStyle } from '@angular/common';
 import { InputContainerComponent } from '../input-container/input-container.component';
 import { buttonAppear } from '../../animations/button.animation';
-
+import { MenuComponent } from '../menu/menu.component';
+import { Node } from 'prosemirror-model';
 type Coordinates = {
   left: number;
   right: number;
@@ -16,7 +17,6 @@ type Coordinates = {
 
 @Component({
   selector: 'lib-wrapper',
-  standalone: true,
   imports: [
     TraakEditorComponent,
     ToolTipComponent,
@@ -24,7 +24,9 @@ type Coordinates = {
     NgStyle,
     InputContainerComponent,
     NgClass,
+    MenuComponent,
   ],
+  standalone: true,
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.css'],
   animations: [buttonAppear],
@@ -36,16 +38,25 @@ export class WrapperComponent {
   top?: number;
   view?: EditorView;
   currentTransaction?: Transaction;
+  node?: Node;
+  start?: number;
   showInput: boolean = false;
   showToolTip: boolean = false;
   hoveringToolTip: boolean = false;
   blockMenuCoordinates?: Coordinates;
   showMenu: boolean = false;
 
-  get classes() {
+  get addButtonClasses() {
     return {
-      visible: this.showToolTip || this.hoveringToolTip,
-      hidden: !this.showToolTip && !this.hoveringToolTip,
+      'add-button__visible': this.showToolTip || this.hoveringToolTip,
+      'add-button__hidden': !this.showToolTip && !this.hoveringToolTip,
+    };
+  }
+
+  get menuClasses() {
+    return {
+      menu__visible: this.showMenu,
+      menu__hidden: !this.showMenu,
     };
   }
 
@@ -71,7 +82,7 @@ export class WrapperComponent {
         selection.to >= 0 &&
         selection.to <= docSize
       ) {
-        const coords = this.view?.coordsAtPos(selection.from);
+        const coords = this.view?.coordsAtPos(selection.from - 1);
         if (coords) {
           this.right = coords.right;
           this.left = coords.right;
@@ -88,6 +99,8 @@ export class WrapperComponent {
   handleNodeHover($event: CustomEvent) {
     this.showToolTip = true;
     this.blockMenuCoordinates = $event.detail.dims;
+    this.node = $event.detail.node;
+    this.start = $event.detail.start;
   }
 
   handleMenuHover($event: MouseEvent) {
@@ -105,8 +118,12 @@ export class WrapperComponent {
     this.showToolTip = false;
   }
 
-  handleMenuButtonClick($event: MouseEvent): void {
+  handleMenuButtonClick($event: MouseEvent) {
     $event.preventDefault();
     this.showMenu = true;
+  }
+
+  hideMenu($event: boolean) {
+    this.showMenu = $event;
   }
 }

@@ -58,8 +58,25 @@
     (click)="handleMenuButtonClick($event)"
     class="add-button"
     @buttonAppear
-    [ngClass]="classes"
+    [ngClass]="addButtonClasses"
   >
     +
   </button>
+</div>
+<div
+  *ngIf="this.blockMenuCoordinates"
+  class="menu-container"
+  [ngStyle]="{
+    position: 'absolute',
+    'top.px': blockMenuCoordinates.top,
+    'left.px': blockMenuCoordinates.left - 150,
+  }"
+  [ngClass]="menuClasses"
+>
+  <block-menu
+    [view]="view"
+    [node]="node"
+    [start]="start"
+    (hideMenuEvent)="hideMenu($event)"
+  ></block-menu>
 </div>

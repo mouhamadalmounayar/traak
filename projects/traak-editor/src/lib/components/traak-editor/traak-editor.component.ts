@@ -78,6 +78,7 @@ export class TraakEditorComponent implements AfterViewInit {
           }),
         ],
       });
+      this.viewEvent.emit(view);
     }
   }
 
