@@ -5,13 +5,15 @@ export function addLine(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  const { schema, selection }  = state;
+  const { schema, selection } = state;
   const { $from } = selection;
   const lineNode = schema.nodes['line'].create();
   if (lineNode) {
     const tr = state.tr.insert($from.pos, lineNode).scrollIntoView();
     const newPos = $from.pos + 2 + lineNode.content.size;
-    tr.setSelection(TextSelection.create(tr.doc, newPos, newPos));
+    tr.setSelection(
+      TextSelection.create(tr.doc, newPos, newPos),
+    ).scrollIntoView();
     if (dispatch) {
       dispatch(tr);
     }
