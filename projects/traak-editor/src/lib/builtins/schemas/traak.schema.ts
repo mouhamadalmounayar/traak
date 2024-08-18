@@ -2,6 +2,21 @@ import { Schema } from 'prosemirror-model';
 
 export const schema = new Schema({
   nodes: {
+    list_item: {
+      content: 'text*',
+      toDOM() {
+        return ['li', 0];
+      },
+      parseDOM: [{ tag: 'li' }],
+      defining: true,
+    },
+    bullet_list: {
+      content: 'list_item*',
+      toDOM() {
+        return ['ul', 0];
+      },
+      parseDOM: [{ tag: 'ul' }],
+    },
     doc_title: {
       content: 'text*',
       toDOM() {
@@ -18,7 +33,7 @@ export const schema = new Schema({
       parseDOM: [{ tag: 'p' }],
     },
     doc: {
-      content: 'doc_title line*',
+      content: 'doc_title (line|bullet_list)*',
     },
   },
   marks: {
@@ -52,8 +67,8 @@ export const schema = new Schema({
       },
       inclusive: false,
       toDOM(node) {
-        const {href} = node.attrs
-        return ['a', {href} , 0];
+        const { href } = node.attrs;
+        return ['a', { href }, 0];
       },
       parseDOM: [
         {

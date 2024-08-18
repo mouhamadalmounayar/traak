@@ -82,7 +82,7 @@ export class WrapperComponent {
         selection.to >= 0 &&
         selection.to <= docSize
       ) {
-        const coords = this.view?.coordsAtPos(selection.from - 1);
+        const coords = this.view?.coordsAtPos(selection.from);
         if (coords) {
           this.right = coords.right;
           this.left = coords.right;

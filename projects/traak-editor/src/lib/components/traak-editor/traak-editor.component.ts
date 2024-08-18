@@ -18,7 +18,6 @@ import {
   basicTraakRemoveCommands,
 } from '../../builtins/commands/index';
 import { keymap } from 'prosemirror-keymap';
-import { toggleMark } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
 import {
   BOLD,
@@ -33,7 +32,7 @@ import { hoverPlugin } from '../../builtins/plugins';
   selector: 'lib-traak-editor',
   standalone: true,
   imports: [],
-  template: ` <div #editor class="outlined"></div> `,
+  template: ` <div #editor test-id="editor"></div> `,
   styles: '',
 })
 export class TraakEditorComponent implements AfterViewInit {
@@ -53,10 +52,10 @@ export class TraakEditorComponent implements AfterViewInit {
         plugins: [
           inputRules({
             rules: [
-              markInputRule(BOLD, schema.marks.bold),
-              markInputRule(ITALIC, schema.marks.italic),
-              markInputRule(STRIKETHROUGH, schema.marks.strikethrough),
-              markInputRule(CODE, schema.marks.code),
+              markInputRule(BOLD, schema.marks['bold']),
+              markInputRule(ITALIC, schema.marks['italic']),
+              markInputRule(STRIKETHROUGH, schema.marks['strikethrough']),
+              markInputRule(CODE, schema.marks['code']),
             ],
           }),
         ],
@@ -65,8 +64,8 @@ export class TraakEditorComponent implements AfterViewInit {
         state: state,
         dispatchTransaction: (tr) => {
           const newState = view.state.apply(tr);
-          this.transactionEvent.emit(tr);
           view.updateState(newState);
+          this.transactionEvent.emit(tr);
           this.viewEvent.emit(view);
         },
         plugins: [
@@ -74,7 +73,6 @@ export class TraakEditorComponent implements AfterViewInit {
           keymap({
             Enter: basicTraakAddCommands,
             Backspace: basicTraakRemoveCommands,
-            'Ctrl-b': toggleMark(schema.marks['bold']),
           }),
         ],
       });

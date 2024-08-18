@@ -4,13 +4,14 @@ export const hoverPlugin = new Plugin({
   props: {
     handleDOMEvents: {
       mouseover(view, event) {
+        const NON_HOVERABLE_NODES = ['doc_title', 'list_item', 'bullet_list'];
         const target = event.target as HTMLElement;
         const posInDom = view.posAtDOM(target, 0);
         const $posInDom = view.state.doc.resolve(posInDom);
         if ($posInDom.pos === 0) {
           return;
         }
-        if ($posInDom.parent.type.name === 'doc_title') {
+        if (NON_HOVERABLE_NODES.includes($posInDom.parent.type.name)) {
           return;
         }
         const start = $posInDom.start();

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EditorView } from 'prosemirror-view';
-import { addLine } from '../../builtins/commands';
+import { addBulletList, addLine } from '../../builtins/commands';
 import { Node } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 @Component({
@@ -11,6 +11,14 @@ import { TextSelection } from 'prosemirror-state';
   styleUrl: './menu.component.css',
 })
 export class MenuComponent {
+  addBulletList($event: MouseEvent) {
+    $event.preventDefault();
+    if (this.view) {
+      this.setCursorToEndOfLine();
+      addBulletList(this.view.state, this.view.dispatch);
+    }
+  }
+
   @Input() view?: EditorView;
   @Input() node?: Node;
   @Input() start?: number;
