@@ -17,6 +17,13 @@ export const schema = new Schema({
       },
       parseDOM: [{ tag: 'ul' }],
     },
+    ordered_list: {
+      content: 'list_item*',
+      toDOM() {
+        return ['ol', 0];
+      },
+      parseDOM: [{ tag: 'ol' }],
+    },
     doc_title: {
       content: 'text*',
       toDOM() {
@@ -33,7 +40,7 @@ export const schema = new Schema({
       parseDOM: [{ tag: 'p' }],
     },
     doc: {
-      content: 'doc_title (line|bullet_list)*',
+      content: 'doc_title (line|bullet_list|ordered_list)*',
     },
   },
   marks: {
