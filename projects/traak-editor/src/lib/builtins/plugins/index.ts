@@ -4,7 +4,12 @@ export const hoverPlugin = new Plugin({
   props: {
     handleDOMEvents: {
       mouseover(view, event) {
-        const NON_HOVERABLE_NODES = ['doc_title', 'list_item', 'bullet_list'];
+        const NON_HOVERABLE_NODES = [
+          'doc_title',
+          'list_item',
+          'bullet_list',
+          'ordered_list',
+        ];
         const target = event.target as HTMLElement;
         const posInDom = view.posAtDOM(target, 0);
         const $posInDom = view.state.doc.resolve(posInDom);

@@ -30,7 +30,7 @@ describe('MenuComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call the addList on click', () => {
+  it('should call the addLine on click', () => {
     const addLineSpy = jest.spyOn(component, 'addLine');
     const button = fixture.debugElement.nativeElement.querySelector(
       '[test-id="line-menu-element"]',
@@ -46,6 +46,15 @@ describe('MenuComponent', () => {
     );
     button.click();
     expect(addBulletListSpy).toHaveBeenCalled();
+  });
+
+  it('should call the addOrderedList on click', () => {
+    const addOrderedListSpy = jest.spyOn(component, 'addOrderedList');
+    const button = fixture.debugElement.nativeElement.querySelector(
+      '[test-id="ordered-list-menu-element"]',
+    );
+    button.click();
+    expect(addOrderedListSpy).toHaveBeenCalled();
   });
 
   it('should call hideMenu on mouseleave event', () => {
@@ -80,6 +89,19 @@ describe('MenuComponent', () => {
       traakBuilders.bullet_list(traakBuilders.list_item()),
     );
     component.addBulletList(new MouseEvent('click'));
+    ist(component.view.state.doc, expectedDoc, eq);
+  });
+
+  it('should add an ordered_list to the document', () => {
+    component.view = createView(state);
+    component.node = traakBuilders.line('<a>Hello from traak');
+    component.start = select(doc).from;
+    const expectedDoc = traakBuilders.doc(
+      traakBuilders.doc_title('Page title'),
+      traakBuilders.line('Hello from traak'),
+      traakBuilders.ordered_list(traakBuilders.list_item()),
+    );
+    component.addOrderedList(new MouseEvent('click'));
     ist(component.view.state.doc, expectedDoc, eq);
   });
 

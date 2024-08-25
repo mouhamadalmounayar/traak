@@ -2,9 +2,9 @@ import { builders, eq } from 'prosemirror-test-builder';
 import { traakSchema } from '../../lib/builtins/schemas';
 import { Node } from 'prosemirror-model';
 import ist from 'ist';
-import { Command, Transaction } from 'prosemirror-state';
+import { Command, EditorState, Transaction } from 'prosemirror-state';
 import {
-  addBulletList,
+  addList,
   addLine,
   addLineFromTitle,
   defaultRemove,
@@ -26,6 +26,15 @@ const apply = (doc: Node, command: Command, result?: Node) => {
 const traakBuilders = builders(traakSchema);
 
 describe('basicTraakAddCommands', () => {
+  let addBulletList: Command;
+  beforeEach(() => {
+    addBulletList = (
+      state: EditorState,
+      dispatch: ((tr: Transaction) => void) | undefined,
+    ) => {
+      return addList('bullet_list', state, dispatch);
+    };
+  });
   it('should add a line to the document', async () => {
     const doc = traakBuilders.doc(
       traakBuilders.doc_title('Page title'),

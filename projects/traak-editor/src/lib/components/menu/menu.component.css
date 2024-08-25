@@ -25,6 +25,13 @@
   border-radius: 3px;
 }
 
+.menu-element_caption {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 60%;
+}
+
 .menu-element:hover {
   background-color: var(--hover-gray);
   transition: all ease 0.15s;
