@@ -245,14 +245,15 @@ export function defaultRemove(
 /**
  * adds a bullet_list node to the document
  */
-export function addBulletList(
+export function addList(
+  listType: string,
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
   const { selection, schema } = state;
   const { from } = selection;
   const listItemNode = schema.nodes['list_item'].create();
-  const bulletListNode = schema.nodes['bullet_list'].create(null, listItemNode);
+  const bulletListNode = schema.nodes[listType].create(null, listItemNode);
   const tr: Transaction = state.tr.insert(from, bulletListNode);
   if (dispatch) {
     dispatch(tr);
