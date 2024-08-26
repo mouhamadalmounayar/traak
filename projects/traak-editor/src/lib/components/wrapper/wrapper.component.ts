@@ -8,12 +8,7 @@ import { InputContainerComponent } from '../input-container/input-container.comp
 import { buttonAppear } from '../../animations/button.animation';
 import { MenuComponent } from '../menu/menu.component';
 import { Node } from 'prosemirror-model';
-type Coordinates = {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-};
+import { Coordinates } from '../../../types/configuration.model';
 
 @Component({
   selector: 'lib-wrapper',
