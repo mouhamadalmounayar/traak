@@ -1,7 +1,9 @@
-<ng-content></ng-content>
+<ng-content class="plugin"> </ng-content>
 
 <lib-traak-editor
   class="editor"
+  (nodeHoverEvent)="handleNodeHover($event)"
+  (nodeOutEvent)="handleNodeOut($event)"
   (transactionEvent)="getTransaction($event)"
   (viewEvent)="getView($event)"
 >

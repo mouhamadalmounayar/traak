@@ -4,8 +4,8 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
+  Input,
   Output,
-  Renderer2,
 } from '@angular/core';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Node } from 'prosemirror-model';
@@ -27,6 +27,7 @@ import {
 } from '../../builtins/inputRules/regexExp';
 import { markInputRule } from '../../builtins/inputRules';
 import { hoverPlugin } from '../../builtins/plugins';
+import { TraakConfiguration } from '../../../types/traakConfiguration';
 
 @Component({
   selector: 'lib-traak-editor',
@@ -41,8 +42,9 @@ export class TraakEditorComponent implements AfterViewInit {
   @Output() transactionEvent = new EventEmitter<Transaction>();
   @Output() nodeHoverEvent = new EventEmitter();
   @Output() nodeOutEvent = new EventEmitter();
+  @Input() config!: TraakConfiguration;
 
-  constructor(private renderer: Renderer2) {}
+  constructor() {}
 
   initializeEditor(): void {
     const schema = traakSchema;

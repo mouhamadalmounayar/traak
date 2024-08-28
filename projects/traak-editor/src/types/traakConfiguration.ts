@@ -1,5 +1,5 @@
 import { Node } from 'prosemirror-model';
-import { TraakPlugin } from '../lib/traakPlugins/traakPlugin';
+import { TraakPlugin } from '../lib/traakPlugins/TraakPlugin';
 
 export type Coordinates = {
   left: number;

@@ -1,13 +1,12 @@
 .input-link {
-  border: none;
-  width: 90%;
+  padding: 3px;
   font-family: "Segoe UI Regular";
   font-size: 10px !important;
-  padding: 0;
   margin-left: 5px;
+  border: none;
 }
 
-.input-link:focus-visible {
+.input-link:focus {
   outline: none;
 }
 
@@ -15,7 +14,7 @@ button {
   background: none;
   border: none;
   cursor: pointer;
-  display : flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -27,5 +26,9 @@ button {
   align-items: center;
   font-family: "Segoe UI Regular";
   font-size: 10px !important;
+  border: 1px solid var(--border-color);
+  width: var(--tooltip-width);
+  background-color: white;
+  padding: 5px;
+  border-radius: 5px;
 }
-
