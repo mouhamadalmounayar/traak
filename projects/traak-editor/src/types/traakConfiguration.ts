@@ -1,5 +1,4 @@
-import { Node } from 'prosemirror-model';
-import { TraakPlugin } from '../lib/traakPlugins/TraakPlugin';
+import { TraakNode } from './traakNode';
 
 export type Coordinates = {
   left: number;
@@ -9,8 +8,6 @@ export type Coordinates = {
 };
 
 export type TraakConfiguration = {
-  useStarterSchema: boolean;
-  useStarterDoc: boolean;
-  traakPlugins: TraakPlugin[];
-  nodes: Node[];
+  useStarters: boolean;
+  nodes: TraakNode[];
 };

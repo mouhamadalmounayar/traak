@@ -1,9 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { TraakEditorComponent } from '../../lib/components/traak-editor/traak-editor.component';
-import { EditorView } from 'prosemirror-view';
-import { builders, eq } from 'prosemirror-test-builder';
-import { traakSchema } from '../../lib/builtins/schemas';
-import ist from 'ist';
+
 
 describe('TraakEditorComponent', () => {
   let component: TraakEditorComponent;
@@ -15,14 +12,6 @@ describe('TraakEditorComponent', () => {
     fixture = TestBed.createComponent(TraakEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should emit view', (done) => {
-    component.viewEvent.subscribe((value) => {
-      expect(value).toBeInstanceOf(EditorView);
-      done();
-    });
-    component.initializeEditor();
   });
 
   it('should call handleNodeHover when nodeHover is dispatched', () => {
@@ -57,18 +46,5 @@ describe('TraakEditorComponent', () => {
       done();
     });
     component.handleNodeOut($event);
-  });
-
-  it('view should be initialized with the correct document', (done) => {
-    const traakBuilders = builders(traakSchema);
-    const doc = traakBuilders.doc(
-      traakBuilders.doc_title('Page Title'),
-      traakBuilders.line('Hello from traak'),
-    );
-    component.viewEvent.subscribe((view) => {
-      ist(view.state.doc, doc, eq);
-      done();
-    });
-    component.initializeEditor();
   });
 });

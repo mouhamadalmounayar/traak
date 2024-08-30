@@ -5,6 +5,7 @@ import {
   Signal,
   ViewEncapsulation,
   contentChildren,
+  OnInit,
 } from '@angular/core';
 import { EditorView } from 'prosemirror-view';
 import { Transaction } from 'prosemirror-state';
@@ -15,6 +16,8 @@ import { Node } from 'prosemirror-model';
 import { TraakConfiguration } from '../../../types/traakConfiguration';
 import { TraakPlugin } from '../../traakPlugins/TraakPlugin';
 import { ToolTipComponent } from '../../traakPlugins/tooltip/tooltip.component';
+import {validate} from "../../validations/validate";
+
 @Component({
   selector: 'lib-wrapper',
   imports: [
@@ -30,16 +33,22 @@ import { ToolTipComponent } from '../../traakPlugins/tooltip/tooltip.component';
   styleUrls: ['./wrapper.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class WrapperComponent {
+export class WrapperComponent implements OnInit{
   view?: EditorView;
   currentTransaction?: Transaction;
   node?: Node;
-  start?: number;
   @Input() config!: TraakConfiguration;
   signals: Signal<readonly TraakPlugin[]> = contentChildren(TraakPlugin);
-  constructor(private cdr: ChangeDetectorRef) {}
+
+  constructor(private cdr: ChangeDetectorRef) {
+  }
+
+  ngOnInit() {
+    validate(this.config)
+  }
 
   getView(view: EditorView) {
+    this.view = view;
     const plugins = this.signals();
     plugins.forEach((plugin: TraakPlugin) => {
       plugin.view = view;

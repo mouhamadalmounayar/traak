@@ -8,11 +8,11 @@ import {
   Output,
 } from '@angular/core';
 import { EditorState, Transaction } from 'prosemirror-state';
-import { Node } from 'prosemirror-model';
+import { Node, Schema } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { ViewChild } from '@angular/core';
-import { traakSchema } from '../../builtins/schemas';
-import { traakStarter } from '../../builtins/starters';
+import { baseSchema, createSchema, traakSchema } from '../../builtins/schemas';
+import { baseStarter, traakStarter } from '../../builtins/starters';
 import {
   basicTraakAddCommands,
   basicTraakRemoveCommands,
@@ -28,6 +28,7 @@ import {
 import { markInputRule } from '../../builtins/inputRules';
 import { hoverPlugin } from '../../builtins/plugins';
 import { TraakConfiguration } from '../../../types/traakConfiguration';
+import { TraakNode } from '../../../types/traakNode';
 
 @Component({
   selector: 'lib-traak-editor',
@@ -42,15 +43,15 @@ export class TraakEditorComponent implements AfterViewInit {
   @Output() transactionEvent = new EventEmitter<Transaction>();
   @Output() nodeHoverEvent = new EventEmitter();
   @Output() nodeOutEvent = new EventEmitter();
-  @Input() config!: TraakConfiguration;
+  @Input() config?: TraakConfiguration;
 
   constructor() {}
-
   initializeEditor(): void {
-    const schema = traakSchema;
-    if (schema) {
+    if (this.config) {
+      const schema = this.initializeSchema(this.config);
+      const doc = this.initializeDoc(this.config, schema);
       const state = EditorState.create({
-        doc: Node.fromJSON(schema, traakStarter),
+        doc: doc,
         plugins: [
           inputRules({
             rules: [
@@ -84,6 +85,28 @@ export class TraakEditorComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.initializeEditor();
+  }
+
+  initializeSchema(config: TraakConfiguration): Schema {
+    let schema: Schema;
+    if (config.useStarters) schema = traakSchema;
+    else {
+      schema = config.nodes.reduce((acc: Schema, curr: TraakNode) => {
+        const newSchema = createSchema(acc, curr.type, curr.spec);
+        acc = newSchema;
+        return acc;
+      }, baseSchema);
+    }
+    return schema;
+  }
+
+  initializeDoc(config: TraakConfiguration, schema: Schema): Node {
+    let doc;
+    if (config.useStarters) doc = Node.fromJSON(schema, traakStarter);
+    else {
+      doc = Node.fromJSON(schema, baseStarter);
+    }
+    return doc;
   }
 
   @HostListener('nodeHover', ['$event'])
