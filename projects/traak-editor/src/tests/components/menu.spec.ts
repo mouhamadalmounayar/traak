@@ -1,10 +1,11 @@
-import { MenuComponent } from '../../lib/components/menu/menu.component';
+import { MenuComponent } from '../../lib/traakPlugins/menu/menu.component';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { builders, eq } from 'prosemirror-test-builder';
 import { traakSchema } from '../../lib/builtins/schemas';
 import { createState, createView, select } from '../__utils__';
 import { EditorState } from 'prosemirror-state';
 import ist from 'ist';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 const traakBuilders = builders(traakSchema);
 const doc = traakBuilders.doc(
   traakBuilders.doc_title('Page title'),
@@ -17,11 +18,13 @@ describe('MenuComponent', () => {
   let state: EditorState;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MenuComponent], // Declare the component here
+      imports: [MenuComponent, NoopAnimationsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MenuComponent);
     component = fixture.componentInstance;
+    component.isPluginVisible = true;
+    component.coordinates = { top: 0, left: 0, right: 0, bottom: 0 };
     state = createState(doc);
     fixture.detectChanges();
   });
@@ -117,13 +120,5 @@ describe('MenuComponent', () => {
     );
     ist(component.view.state.doc, expectedDoc, eq);
     ist(component.view.state.selection, select(expectedDoc), eq);
-  });
-
-  it('should emit false when hideMenu is called', (done) => {
-    component.hideMenuEvent.subscribe((value) => {
-      expect(value).toBe(false);
-      done();
-    });
-    component.hideMenu();
   });
 });

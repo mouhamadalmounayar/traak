@@ -1,4 +1,28 @@
-<div class="container" test-id="container" (mouseleave)="hideMenu()">
+<lib-add-button
+  *ngIf="this.coordinates"
+  (click)="this.showMenu()"
+  (mouseout)="this.onMouseOut()"
+  (mouseover)="this.onMouseOver()"
+  [ngClass]="this.classes"
+  @appear
+  [ngStyle]="{
+    position: 'absolute',
+    'top.px': this.coordinates.top,
+    'left.px': this.coordinates.left - 20,
+  }"
+></lib-add-button>
+<div
+  class="container"
+  test-id="container"
+  (mouseleave)="hideMenu()"
+  @appear
+  *ngIf="this.coordinates && this.isPluginVisible"
+  [ngStyle]="{
+    position: 'absolute',
+    'top.px': this.coordinates.top,
+    'left.px': this.coordinates.left - 150,
+  }"
+>
   <div
     class="menu-element"
     test-id="line-menu-element"

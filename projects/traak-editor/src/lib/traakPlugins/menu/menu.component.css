@@ -36,3 +36,11 @@
   background-color: var(--hover-gray);
   transition: all ease 0.15s;
 }
+
+.add-button__visible {
+  opacity: 1;
+}
+
+.add-button__hidden {
+  opacity: 0;
+}

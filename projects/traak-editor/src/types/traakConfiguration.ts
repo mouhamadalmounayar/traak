@@ -1,3 +1,4 @@
+import { Node } from 'prosemirror-model';
 import { TraakNode } from './traakNode';
 
 export type Coordinates = {
@@ -5,6 +6,12 @@ export type Coordinates = {
   right: number;
   top: number;
   bottom: number;
+};
+
+export type EventDetails = {
+  start: number;
+  dims: Coordinates;
+  node: Node;
 };
 
 export type TraakConfiguration = {

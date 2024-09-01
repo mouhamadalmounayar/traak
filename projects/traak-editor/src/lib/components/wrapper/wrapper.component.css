@@ -51,24 +51,3 @@
   width: 50px;
   height: 20px;
 }
-
-.add-button__hidden {
-  opacity: 0;
-  transform: translateX(-10px);
-  transition: all ease 0.15s;
-}
-
-.add-button__visible {
-  opacity: 1;
-  transition: all ease 0.15s;
-}
-
-.menu__hidden {
-  opacity: 0;
-  transform: translateX(10px);
-}
-
-.menu__visible {
-  opacity: 1;
-  transition: all ease 0.15s;
-}

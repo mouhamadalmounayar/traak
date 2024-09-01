@@ -11,12 +11,13 @@ import { EditorView } from 'prosemirror-view';
 import { Transaction } from 'prosemirror-state';
 import { TraakEditorComponent } from '../traak-editor/traak-editor.component';
 import { NgClass, NgIf, NgStyle } from '@angular/common';
-import { MenuComponent } from '../menu/menu.component';
+import { MenuComponent } from '../../traakPlugins/menu/menu.component';
 import { Node } from 'prosemirror-model';
 import { TraakConfiguration } from '../../../types/traakConfiguration';
 import { TraakPlugin } from '../../traakPlugins/TraakPlugin';
 import { ToolTipComponent } from '../../traakPlugins/tooltip/tooltip.component';
-import {validate} from "../../validations/validate";
+import { validate } from '../../validations/validate';
+import { NodeService } from '../../services/node.service';
 
 @Component({
   selector: 'lib-wrapper',
@@ -33,18 +34,20 @@ import {validate} from "../../validations/validate";
   styleUrls: ['./wrapper.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class WrapperComponent implements OnInit{
+export class WrapperComponent implements OnInit {
   view?: EditorView;
   currentTransaction?: Transaction;
   node?: Node;
   @Input() config!: TraakConfiguration;
   signals: Signal<readonly TraakPlugin[]> = contentChildren(TraakPlugin);
 
-  constructor(private cdr: ChangeDetectorRef) {
-  }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private _nodeService: NodeService,
+  ) {}
 
   ngOnInit() {
-    validate(this.config)
+    validate(this.config);
   }
 
   getView(view: EditorView) {
@@ -65,5 +68,13 @@ export class WrapperComponent implements OnInit{
       plugin.updatePlugin();
     });
     this.cdr.detectChanges();
+  }
+
+  handleNodeHover($event: CustomEvent) {
+    this._nodeService.sendHoverDetails($event.detail);
+  }
+
+  handleNodeOut() {
+    this._nodeService.sendEvent();
   }
 }

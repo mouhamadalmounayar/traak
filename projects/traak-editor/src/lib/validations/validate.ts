@@ -1,5 +1,5 @@
 import {TraakConfiguration} from "../../types/traakConfiguration";
-import {traakConfigurationSchema} from "./validation.schema.";
+import {traakConfigurationSchema} from "./validation.schema";
 
 
 export function validate(config: TraakConfiguration) {

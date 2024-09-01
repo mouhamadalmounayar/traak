@@ -5,5 +5,7 @@
   (transactionEvent)="getTransaction($event)"
   (viewEvent)="getView($event)"
   [config]="this.config"
+  (nodeHoverEvent)="handleNodeHover($event)"
+  (nodeOutEvent)="handleNodeOut()"
 >
 </lib-traak-editor>
