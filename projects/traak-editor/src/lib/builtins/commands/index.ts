@@ -7,26 +7,26 @@ const isCursorAtTheBeginningOfNode = ($pos: ResolvedPos): boolean => {
 };
 
 const isNodeEmpty = (node: Node): boolean => {
-  return node.content.size === 0;
+  return node.textContent.trim().length === 0;
 };
 
 const isNodeAfterTitlePresent = ($pos: ResolvedPos): boolean => {
   return $pos.parent.nodeSize + 1 < $pos.doc.content.size;
 };
-
-/**
- * adds an empty lineNode to the document.
- */
-export function addLine(
+export function addNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
+  nodeType: string,
+  content?: string,
 ) {
   const { schema, selection } = state;
   const { $from } = selection;
-  const lineNode = schema.nodes['line'].create();
-  if (lineNode) {
-    const tr = state.tr.insert($from.pos, lineNode).scrollIntoView();
-    const newPos = $from.pos + 2 + lineNode.content.size;
+  const node = content
+    ? schema.nodes[nodeType].create(null, schema.nodes[content].create())
+    : schema.nodes[nodeType].create();
+  if (node) {
+    const tr = state.tr.insert($from.pos, node).scrollIntoView();
+    const newPos = $from.pos + node.nodeSize;
     tr.setSelection(
       TextSelection.create(tr.doc, newPos, newPos),
     ).scrollIntoView();
@@ -38,8 +38,39 @@ export function addLine(
   return false;
 }
 
+export function addLine(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  return addNode(state, dispatch, 'line');
+}
+
+export function addListItem(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  const { selection } = state;
+  const { $from } = selection;
+  if ($from.parent.type.name === 'list_item')
+    return addNode(state, dispatch, 'list_item');
+  return false;
+}
+
+export function addOrderedList(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  return addNode(state, dispatch, 'ordered_list', 'list_item');
+}
+
+export function addBulletList(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  return addNode(state, dispatch, 'bullet_list', 'list_item');
+}
 /**
- * adds a line from the title node, without splitting the title node.
+ * handles the case when the cursor is located in the title node.
  */
 export function addLineFromTitle(
   state: EditorState,
@@ -76,20 +107,27 @@ export function addLineFromTitle(
   return false;
 }
 
-/**
- * adds a list item to a list that is in the document
- */
-export function addListItem(
+export function removeNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
+  replacementNode?: string,
 ) {
-  const { selection, schema } = state;
+  const { schema, selection } = state;
   const { $from } = selection;
-  if (selection.empty && $from.parent.type.name === 'list_item') {
-    const ListItemNode = schema.nodes['list_item'].create();
-    const tr = state.tr.insert($from.pos, ListItemNode);
-    const newPos = $from.pos + ListItemNode.nodeSize;
-    tr.setSelection(TextSelection.create(tr.doc, newPos, newPos));
+  const currNode = $from.parent;
+  const content = currNode.textContent;
+  if (selection.empty && isCursorAtTheBeginningOfNode($from)) {
+    let tr = state.tr.delete(
+      $from.pos - 1,
+      $from.pos + $from.parent.content.size,
+    );
+    if (replacementNode) {
+      const node = schema.nodes[replacementNode].create(
+        null,
+        schema.text(content || ' '),
+      );
+      tr = tr.insert($from.pos, node);
+    }
     if (dispatch) {
       dispatch(tr);
       return true;
@@ -97,93 +135,31 @@ export function addListItem(
   }
   return false;
 }
-
-/**
- * removes a line node from the document if the line is empty and the cursor is at the beginning of the line.
- */
 export function removeLineNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
   const { selection } = state;
   const { $from } = selection;
-  const currNode = $from.parent;
-  if (
-    selection.empty &&
-    isCursorAtTheBeginningOfNode($from) &&
-    isNodeEmpty(currNode)
-  ) {
-    const tr = state.tr.delete($from.pos - 1, $from.pos);
-    if (dispatch) dispatch(tr);
-    return true;
+  if (isNodeEmpty($from.parent) && $from.parent.type.name === 'line') {
+    return removeNode(state, dispatch);
   }
   return false;
 }
-
-/**
- * removes a list item if it's empty.
- */
 
 export function exitList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  const { selection, schema } = state;
+  const { selection } = state;
   const { $from } = selection;
-  if (
-    $from.parent.type.name === 'list_item' &&
-    isCursorAtTheBeginningOfNode($from) &&
-    isNodeEmpty($from.parent)
-  ) {
-    let tr = state.tr.delete($from.pos - 1, $from.pos);
-    const lineNode = schema.nodes['line'].create();
-    tr = tr.insert($from.pos, lineNode);
-    /*
-     * move the cursor to the end of the line.
-     */
-    tr.setSelection(
-      TextSelection.create(
-        tr.doc,
-        $from.pos + lineNode.nodeSize - 1,
-        $from.pos + lineNode.nodeSize - 1,
-      ),
-    );
-    if (dispatch) {
-      dispatch(tr);
-      return true;
-    }
-  }
+  if ($from.parent.type.name === 'list_item')
+    return removeNode(state, dispatch, 'line');
   return false;
 }
 
 /**
- * lifts a list item out of a list and copies its content to a new line
- */
-export function liftList(
-  state: EditorState,
-  dispatch: ((tr: Transaction) => void) | undefined,
-) {
-  const { schema, selection } = state;
-  const { $from } = selection;
-  if (
-    isCursorAtTheBeginningOfNode($from) &&
-    $from.parent.type.name === 'list_item'
-  ) {
-    const textContent = $from.parent.textContent;
-    let tr = state.tr.delete($from.pos - 1, $from.pos + $from.parent.nodeSize);
-    const lineNode = schema.nodes['line'].create(
-      null,
-      schema.text(textContent || ''),
-    );
-    tr = tr.insert($from.pos, lineNode);
-    if (dispatch) dispatch(tr);
-    return true;
-  }
-  return false;
-}
-
-/**
- * joins two line nodes.
+ * joins two line nodes together.
  */
 export function joinTwoLines(
   state: EditorState,
@@ -228,20 +204,6 @@ export function removeSelection(
   return false;
 }
 
-export function defaultRemove(
-  state: EditorState,
-  dispatch: ((tr: Transaction) => void) | undefined,
-) {
-  const { selection } = state;
-  const { $from, $to } = selection;
-  if ($from.pos === $to.pos) {
-    const tr = state.tr.delete($from.pos - 1, $from.pos);
-    if (dispatch) dispatch(tr);
-    return true;
-  }
-  return false;
-}
-
 /**
  * adds a bullet_list node to the document
  */
@@ -262,6 +224,20 @@ export function addList(
   return false;
 }
 
+export function defaultRemove(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  const { selection } = state;
+  const { $from } = selection;
+  if (selection.empty) {
+    const tr = state.tr.delete($from.pos - 1, $from.pos);
+    if (dispatch) dispatch(tr);
+    return true;
+  }
+  return false;
+}
+
 export const basicTraakAddCommands = chainCommands(
   addLineFromTitle,
   addListItem,
@@ -269,7 +245,6 @@ export const basicTraakAddCommands = chainCommands(
 );
 export const basicTraakRemoveCommands = chainCommands(
   exitList,
-  liftList,
   removeLineNode,
   joinTwoLines,
   defaultRemove,
