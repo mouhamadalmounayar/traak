@@ -24,8 +24,8 @@ import {
   CODE,
   ITALIC,
   STRIKETHROUGH,
-} from '../../builtins/inputRules/regexExp';
-import { markInputRule } from '../../builtins/inputRules';
+} from '../../builtins/input-rules/regexExp';
+import { markInputRule } from '../../builtins/input-rules';
 import { hoverPlugin } from '../../builtins/plugins';
 import { TraakConfiguration } from '../../../types/traakConfiguration';
 import { TraakNode } from '../../../types/traakNode';

@@ -1,7 +1,11 @@
 import { Component, OnInit, forwardRef } from '@angular/core';
 import { NgIf, NgStyle, NgClass } from '@angular/common';
 import { EditorView } from 'prosemirror-view';
-import { addList, addLine } from '../../builtins/commands';
+import {
+  addOrderedList,
+  addBulletList,
+  addLine,
+} from '../../builtins/commands';
 import { Node } from 'prosemirror-model';
 import { TextSelection, Transaction } from 'prosemirror-state';
 import { TraakPlugin } from '../TraakPlugin';
@@ -9,6 +13,7 @@ import { Coordinates } from '../../../types/traakConfiguration';
 import { AddButtonComponent } from './add-button/add-button.component';
 import { NodeService } from '../../services/node.service';
 import { appear } from '../../animations/appear';
+
 @Component({
   selector: 'block-menu',
   standalone: true,
@@ -27,7 +32,9 @@ export class MenuComponent extends TraakPlugin implements OnInit {
   start?: number;
   isPluginVisible: boolean = false;
   coordinates?: Coordinates;
+
   updatePlugin(): void {}
+
   isHoveringNode: boolean = false;
   isHoveringButton: boolean = false;
 
@@ -91,7 +98,7 @@ export class MenuComponent extends TraakPlugin implements OnInit {
     $event.preventDefault();
     if (this.view) {
       this.setCursorToEndOfLine();
-      addList('bullet_list', this.view.state, this.view.dispatch);
+      addBulletList(this.view.state, this.view.dispatch);
     }
   }
 
@@ -99,7 +106,7 @@ export class MenuComponent extends TraakPlugin implements OnInit {
     $event.preventDefault();
     if (this.view) {
       this.setCursorToEndOfLine();
-      addList('ordered_list', this.view.state, this.view.dispatch);
+      addOrderedList(this.view.state, this.view.dispatch);
     }
   }
 
