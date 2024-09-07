@@ -22,12 +22,16 @@
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
     "prettier": "^3.3.3",
+    "prosemirror-commands": "^1.6.0",
+    "prosemirror-inputrules": "^1.4.0",
+    "prosemirror-keymap": "^1.2.2",
     "prosemirror-model": "^1.22.2",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.33.9",
     "rxjs": "^7.8.1",
     "ts-jest": "^29.2.4",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.4",
