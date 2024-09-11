@@ -4,14 +4,15 @@ export const traakSchema = new Schema({
   nodes: {
     list_item: {
       content: 'text*',
+      group: 'block',
       toDOM() {
         return ['li', 0];
       },
       parseDOM: [{ tag: 'li' }],
-      defining: true,
     },
     bullet_list: {
       content: 'list_item*',
+      group: 'block',
       toDOM() {
         return ['ul', 0];
       },
@@ -19,6 +20,7 @@ export const traakSchema = new Schema({
     },
     ordered_list: {
       content: 'list_item*',
+      group: 'block',
       toDOM() {
         return ['ol', 0];
       },
@@ -26,6 +28,7 @@ export const traakSchema = new Schema({
     },
     doc_title: {
       content: 'text*',
+      group: 'block',
       toDOM() {
         return ['h1', 0];
       },
@@ -33,6 +36,7 @@ export const traakSchema = new Schema({
     },
     text: {},
     line: {
+      group: 'block',
       content: 'text*',
       toDOM() {
         return ['p', 0];
@@ -40,7 +44,7 @@ export const traakSchema = new Schema({
       parseDOM: [{ tag: 'p' }],
     },
     doc: {
-      content: 'doc_title (line|bullet_list|ordered_list)*',
+      content: 'block*',
     },
   },
   marks: {

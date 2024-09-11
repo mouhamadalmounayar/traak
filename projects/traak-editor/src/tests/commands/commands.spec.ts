@@ -127,7 +127,7 @@ describe('basicTraakRemoveCommands', () => {
       traakBuilders.doc_title('Page title'),
       traakBuilders.line('hello from traak'),
       traakBuilders.bullet_list(traakBuilders.list_item('item1')),
-      traakBuilders.line(" "),
+      traakBuilders.line(),
     );
     apply(doc, exitList, expectedResult);
   });

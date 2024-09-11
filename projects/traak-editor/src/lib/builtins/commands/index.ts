@@ -10,9 +10,13 @@ const isNodeEmpty = (node: Node): boolean => {
   return node.textContent.trim().length === 0;
 };
 
-const isNodeAfterTitlePresent = ($pos: ResolvedPos): boolean => {
+const isFirstChild = ($pos: ResolvedPos, depth: number) => {
+  return $pos.index(depth) === 0;
+};
+const isLastNode = ($pos: ResolvedPos): boolean => {
   return $pos.parent.nodeSize + 1 < $pos.doc.content.size;
 };
+
 export function addNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
@@ -69,6 +73,7 @@ export function addBulletList(
 ) {
   return addNode(state, dispatch, 'bullet_list', 'list_item');
 }
+
 /**
  * handles the case when the cursor is located in the title node.
  */
@@ -79,7 +84,7 @@ export function addLineFromTitle(
   const { schema, selection } = state;
   const { $from } = selection;
   if ($from.node().type.name === 'doc_title') {
-    if (isNodeAfterTitlePresent($from)) {
+    if (isLastNode($from)) {
       const tr = state.tr;
       tr.setSelection(
         TextSelection.create(
@@ -110,24 +115,12 @@ export function addLineFromTitle(
 export function removeNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
-  replacementNode?: string,
 ) {
-  const { schema, selection } = state;
+  const { selection } = state;
   const { $from } = selection;
-  const currNode = $from.parent;
-  const content = currNode.textContent;
   if (selection.empty && isCursorAtTheBeginningOfNode($from)) {
-    let tr = state.tr.delete(
-      $from.pos - 1,
-      $from.pos + $from.parent.content.size,
-    );
-    if (replacementNode) {
-      const node = schema.nodes[replacementNode].create(
-        null,
-        schema.text(content || ' '),
-      );
-      tr = tr.insert($from.pos, node);
-    }
+    let tr = state.tr;
+    tr = tr.delete($from.pos - 1, $from.pos + $from.parent.content.size);
     if (dispatch) {
       dispatch(tr);
       return true;
@@ -135,6 +128,7 @@ export function removeNode(
   }
   return false;
 }
+
 export function removeLineNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
@@ -151,10 +145,35 @@ export function exitList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  const { selection } = state;
+  const { selection, schema } = state;
   const { $from } = selection;
-  if ($from.parent.type.name === 'list_item')
-    return removeNode(state, dispatch, 'line');
+  if (
+    $from.parent.type.name === 'list_item' &&
+    isCursorAtTheBeginningOfNode($from)
+  ) {
+    const range = $from.blockRange();
+    if (!range) return false;
+    /*
+      Checks if it's the first list item. If it's empty, delete the whole bullet list. If it's not lift the node.
+     */
+    if (isFirstChild($from, range.depth)) {
+      let tr;
+      if (isNodeEmpty($from.parent)) {
+        const listPos = $from.before(range.depth);
+        const listNode = $from.node(range.depth);
+        tr = state.tr.delete(listPos, listPos + listNode.nodeSize);
+      } else {
+        tr = state.tr.lift(range, range.depth - 1);
+        tr = tr.setBlockType($from.pos, $from.pos, schema.nodes['line']);
+      }
+      if (dispatch) dispatch(tr);
+      return true;
+    }
+    let tr = state.tr.lift(range, range.depth - 1);
+    tr = tr.setBlockType(range.start, range.end, schema.nodes['line']);
+    if (dispatch) dispatch(tr);
+    return true;
+  }
   return false;
 }
 
