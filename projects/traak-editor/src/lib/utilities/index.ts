@@ -1,5 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import { TextSelection } from 'prosemirror-state';
+import { NodeType } from 'prosemirror-model';
 
 function getResolvedPos(view: EditorView) {
   const { state } = view;
@@ -24,6 +25,15 @@ export function getNodeType(view: EditorView): string {
 export function getNode(view: EditorView) {
   const $nodePos = getResolvedPos(view);
   return $nodePos.parent;
+}
+
+/**
+ * returns the text content of the current node.
+ * @param view
+ */
+export function getTextContent(view: EditorView): string {
+  const $nodePos = getResolvedPos(view);
+  return $nodePos.parent.textContent;
 }
 
 /**
@@ -59,5 +69,29 @@ export function moveCursorToEndOfNode(view: EditorView) {
       $nodePos.node().nodeSize + 1,
     ),
   );
+  view.dispatch(tr);
+}
+
+/**
+ * returns the coordinates of the current position in the document.
+ * @param view
+ */
+export function getSelectionCoords(view: EditorView) {
+  const $nodePos = getResolvedPos(view);
+  return view.coordsAtPos($nodePos.pos);
+}
+
+/**
+ * Adds a node at the current selection.
+ * @param view
+ * @param node
+ */
+export function addNode(view: EditorView, node: NodeType) {
+  const $nodePos = getResolvedPos(view);
+  const { state } = view;
+  const { tr } = state;
+  // improvement : handle the content.
+  const nodeToInsert = node.create();
+  tr.insert($nodePos.pos, nodeToInsert);
   view.dispatch(tr);
 }
