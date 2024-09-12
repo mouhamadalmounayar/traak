@@ -3,6 +3,7 @@ import { traakSchema } from '../../lib/builtins/schemas';
 import { createView, createState } from '../__utils__';
 import ist from 'ist';
 import {
+  addNode,
   getNodeType,
   isCursorAtStartOfNode,
   isNodeEmpty,
@@ -50,7 +51,7 @@ describe('Node utilities', () => {
     });
   });
   describe('isCursorAtStartOfNode', () => {
-    it('should return true for cursor at starting of node', async () => {
+    it('should return true for cursor at start of node', async () => {
       const doc = traakBuilders.doc(traakBuilders.line('<a>Hello from traak'));
       const view = createView(createState(doc));
       const result = isCursorAtStartOfNode(view);
@@ -75,6 +76,18 @@ describe('Node utilities', () => {
         traakBuilders.line(''),
       );
       moveCursorToEndOfNode(view);
+      ist(view.state.doc, expectedDoc, eq);
+    });
+  });
+  describe('addNode', () => {
+    it('should add a node at the current selection', async () => {
+      const doc = traakBuilders.doc(traakBuilders.line('Hello from traak<a>'));
+      const view = createView(createState(doc));
+      addNode(view, traakSchema.nodes['line']);
+      const expectedDoc = traakBuilders.doc(
+        traakBuilders.line('Hello from traak'),
+        traakBuilders.line(),
+      );
       ist(view.state.doc, expectedDoc, eq);
     });
   });
