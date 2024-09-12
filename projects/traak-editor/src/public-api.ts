@@ -4,12 +4,17 @@
 export * from './lib/components/wrapper/wrapper.component';
 
 /*
- * plugins
+ plugins
  */
 export * from './lib/traakPlugins/tooltip/tooltip.component';
 export * from './lib/traakPlugins/menu/menu.component';
 
 /*
- * types
+ types
  */
 export * from './types/traakConfiguration';
+
+/*
+ utilities
+ */
+export * from './lib/utilities';
