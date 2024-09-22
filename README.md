@@ -17,7 +17,7 @@ npm install --legacy-peer-deps
 ```
 2. Run the editor's library : 
 ```shell
-cd frontend/projects/traak-editor
+cd projects/traak-editor
 ng build --watch
 ```
 3. Run the angular's project : 
