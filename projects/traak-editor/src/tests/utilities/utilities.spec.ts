@@ -3,6 +3,8 @@ import { traakSchema } from '../../lib/builtins/schemas';
 import { createView, createState } from '../__utils__';
 import ist from 'ist';
 import { TraakManager } from '../../lib/utilities';
+import { Tree } from '../../types/tree';
+
 describe('Node utilities', () => {
   const traakBuilders = builders(traakSchema);
   describe('getNodeType', () => {
@@ -85,7 +87,7 @@ describe('Node utilities', () => {
       const doc = traakBuilders.doc(traakBuilders.line('Hello from traak<a>'));
       const view = createView(createState(doc));
       const manager = new TraakManager(view);
-      manager.addNode(traakSchema.nodes['line']);
+      manager.addNode(new Tree('line', traakSchema));
       const expectedDoc = traakBuilders.doc(
         traakBuilders.line('Hello from traak'),
         traakBuilders.line(),
