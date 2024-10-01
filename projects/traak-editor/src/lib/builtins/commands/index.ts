@@ -1,6 +1,12 @@
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { chainCommands } from 'prosemirror-commands';
 import { ResolvedPos, Node } from 'prosemirror-model';
+import { Tree } from '../../../types/tree';
+import { traakSchema } from '../schemas';
+
+/*
+ * utilities
+ */
 
 const isCursorAtTheBeginningOfNode = ($pos: ResolvedPos): boolean => {
   return $pos.pos === $pos.before() + 1;
@@ -20,14 +26,11 @@ const isLastNode = ($pos: ResolvedPos): boolean => {
 export function addNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
-  nodeType: string,
-  content?: string,
+  tree: Tree,
 ) {
-  const { schema, selection } = state;
+  const { selection } = state;
   const { $from } = selection;
-  const node = content
-    ? schema.nodes[nodeType].create(null, schema.nodes[content].create())
-    : schema.nodes[nodeType].create();
+  const node = tree.createNode();
   if (node) {
     const tr = state.tr.insert($from.pos, node).scrollIntoView();
     const newPos = $from.pos + node.nodeSize;
@@ -46,7 +49,7 @@ export function addLine(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  return addNode(state, dispatch, 'line');
+  return addNode(state, dispatch, new Tree('line', traakSchema));
 }
 
 export function addListItem(
@@ -56,7 +59,7 @@ export function addListItem(
   const { selection } = state;
   const { $from } = selection;
   if ($from.parent.type.name === 'list_item')
-    return addNode(state, dispatch, 'list_item');
+    return addNode(state, dispatch, new Tree('list_item', traakSchema));
   return false;
 }
 
@@ -64,14 +67,50 @@ export function addOrderedList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  return addNode(state, dispatch, 'ordered_list', 'list_item');
+  return addNode(
+    state,
+    dispatch,
+    new Tree('ordered_list', traakSchema, new Tree('list_item', traakSchema)),
+  );
 }
 
 export function addBulletList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  return addNode(state, dispatch, 'bullet_list', 'list_item');
+  return addNode(
+    state,
+    dispatch,
+    new Tree('bullet_list', traakSchema, new Tree('list_item', traakSchema)),
+  );
+}
+
+export function addTaskList(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  return addNode(
+    state,
+    dispatch,
+    new Tree(
+      'task_list',
+      traakSchema,
+      new Tree('task_checkbox', traakSchema),
+      new Tree('line', traakSchema),
+    ),
+  );
+}
+
+export function addTaskListItem(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  const { selection } = state;
+  const { $from } = selection;
+  if ($from.node(1).type.name === 'task_list') {
+    return addTaskList(state, dispatch);
+  }
+  return false;
 }
 
 /**
@@ -115,16 +154,43 @@ export function addLineFromTitle(
 export function removeNode(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
+  depth?: number,
 ) {
   const { selection } = state;
   const { $from } = selection;
+  const node = depth ? $from.node(depth) : $from.parent;
   if (selection.empty && isCursorAtTheBeginningOfNode($from)) {
     let tr = state.tr;
-    tr = tr.delete($from.pos - 1, $from.pos + $from.parent.content.size);
+    tr = tr.delete(
+      $from.before(depth) - 1,
+      $from.before(depth) + node.nodeSize,
+    );
     if (dispatch) {
       dispatch(tr);
       return true;
     }
+  }
+  return false;
+}
+
+export function replaceWithNode(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+  nodeType: Tree,
+) {
+  const { selection } = state;
+  const { $from } = selection;
+  const range = $from.blockRange();
+  const node = nodeType.createNode();
+  let tr = state.tr;
+  tr = tr.replaceWith(
+    $from.before(range.depth),
+    $from.after(range.depth),
+    node,
+  );
+  if (dispatch) {
+    dispatch(tr);
+    return true;
   }
   return false;
 }
@@ -141,38 +207,65 @@ export function removeLineNode(
   return false;
 }
 
+export function removeTaskList(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined,
+) {
+  const { selection } = state;
+  const { $from } = selection;
+  if (
+    $from.node(1).type.name === 'task_list' &&
+    isCursorAtTheBeginningOfNode($from)
+  ) {
+    // to do replace with line containing text content.
+    return replaceWithNode(state, dispatch, new Tree('line', traakSchema));
+  }
+  return false;
+}
+
+/*
+ * Specific function to handle the list complex case.
+ */
 export function exitList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  const { selection, schema } = state;
+  const { selection } = state;
   const { $from } = selection;
   if (
     $from.parent.type.name === 'list_item' &&
     isCursorAtTheBeginningOfNode($from)
   ) {
-    const range = $from.blockRange();
-    if (!range) return false;
-    /*
-      Checks if it's the first list item. If it's empty, delete the whole bullet list. If it's not lift the node.
-     */
-    if (isFirstChild($from, range.depth)) {
-      let tr;
-      if (isNodeEmpty($from.parent)) {
-        const listPos = $from.before(range.depth);
-        const listNode = $from.node(range.depth);
-        tr = state.tr.delete(listPos, listPos + listNode.nodeSize);
-      } else {
-        tr = state.tr.lift(range, range.depth - 1);
-        tr = tr.setBlockType($from.pos, $from.pos, schema.nodes['line']);
+    const { selection, schema } = state;
+    const { $from } = selection;
+    if (
+      $from.parent.type.name === 'list_item' &&
+      isCursorAtTheBeginningOfNode($from)
+    ) {
+      const range = $from.blockRange();
+      if (!range) return false;
+      /*
+        Checks if it's the first list item. If it's empty, delete the whole bullet list. If it's not lift the node.
+       */
+      if (isFirstChild($from, range.depth)) {
+        let tr;
+        if (isNodeEmpty($from.parent)) {
+          const listPos = $from.before(range.depth);
+          const listNode = $from.node(range.depth);
+          tr = state.tr.delete(listPos, listPos + listNode.nodeSize);
+        } else {
+          tr = state.tr.lift(range, range.depth - 1);
+          tr = tr.setBlockType($from.pos, $from.pos, schema.nodes['line']);
+        }
+        if (dispatch) dispatch(tr);
+        return true;
       }
+      let tr = state.tr.lift(range, range.depth - 1);
+      tr = tr.setBlockType(range.start, range.end, schema.nodes['line']);
       if (dispatch) dispatch(tr);
       return true;
     }
-    let tr = state.tr.lift(range, range.depth - 1);
-    tr = tr.setBlockType(range.start, range.end, schema.nodes['line']);
-    if (dispatch) dispatch(tr);
-    return true;
+    return false;
   }
   return false;
 }
@@ -258,12 +351,14 @@ export function defaultRemove(
 }
 
 export const basicTraakAddCommands = chainCommands(
+  addTaskListItem,
   addLineFromTitle,
   addListItem,
   addLine,
 );
 export const basicTraakRemoveCommands = chainCommands(
   exitList,
+  removeTaskList,
   removeLineNode,
   joinTwoLines,
   defaultRemove,

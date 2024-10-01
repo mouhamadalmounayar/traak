@@ -3,6 +3,7 @@ import { WrapperComponent } from 'traak-editor';
 import { ToolTipComponent } from 'traak-editor';
 import { TraakConfiguration } from 'traak-editor';
 import { MenuComponent } from 'traak-editor';
+
 @Component({
   selector: 'app-editor',
   standalone: true,
