@@ -10,6 +10,53 @@ export const traakSchema = new Schema({
       },
       parseDOM: [{ tag: 'li' }],
     },
+    task_checkbox: {
+      attrs: { checked: { default: 'false' } },
+      selectable: true,
+      group: 'block',
+      toDOM(node) {
+        if (node.attrs['checked'] === 'true') {
+          return [
+            'input',
+            {
+              type: 'checkbox',
+              class: 'task-checkbox',
+              checked: '',
+            },
+          ];
+        }
+        return [
+          'div',
+          {
+            contenteditable: 'false',
+          },
+          [
+            'input',
+            {
+              type: 'checkbox',
+              class: 'task-checkbox',
+            },
+          ],
+        ];
+      },
+      parseDOM: [
+        {
+          tag: 'input[type="checkbox"]',
+          getAttrs(dom) {
+            return {
+              checked: dom.getAttribute('checked') === 'true',
+            };
+          },
+        },
+      ],
+    },
+    task_list: {
+      content: 'task_checkbox line*',
+      group: 'block',
+      toDOM() {
+        return ['div', { class: 'task-list' }, 0];
+      },
+    },
     bullet_list: {
       content: 'list_item*',
       group: 'block',
