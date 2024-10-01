@@ -12,6 +12,7 @@ export * from './lib/traakPlugins/menu/menu.component';
 /*
  types
  */
+export * from './types/traakNode';
 export * from './types/traakConfiguration';
 
 /*

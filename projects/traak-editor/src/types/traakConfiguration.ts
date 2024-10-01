@@ -8,10 +8,19 @@ export type Coordinates = {
   bottom: number;
 };
 
-export type EventDetails = {
+export type HoverEventDetails = {
   start: number;
   dims: Coordinates;
   node: Node;
+};
+
+export type OutEventDetails = {
+  event: string;
+};
+
+export type ClickEventDetails = {
+  type: string;
+  domElement: HTMLElement;
 };
 
 export type TraakConfiguration = {
