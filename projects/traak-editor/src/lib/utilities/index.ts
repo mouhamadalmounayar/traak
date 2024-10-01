@@ -1,6 +1,7 @@
 import { EditorView } from 'prosemirror-view';
 import { TextSelection } from 'prosemirror-state';
-import { NodeType, ResolvedPos } from 'prosemirror-model';
+import { ResolvedPos } from 'prosemirror-model';
+import { Tree } from '../../types/tree';
 
 export class TraakManager {
   constructor(private view: EditorView) {
@@ -85,18 +86,15 @@ export class TraakManager {
   /**
    * Adds a node at the current selection.
    */
-  addNode(node: NodeType) {
+  addNode(tree: Tree) {
     if (!this.view) {
       throw new Error('EditorView is not set');
     }
     const $nodePos = this.getResolvedPos();
     const { state } = this.view;
     const { tr } = state;
-
-    // Create a new instance of the node
-    const nodeToInsert = node.create();
-
-    tr.insert($nodePos.pos, nodeToInsert);
+    const node = tree.createNode();
+    tr.insert($nodePos.pos, node);
     this.view.dispatch(tr);
   }
 }
