@@ -6,6 +6,7 @@ import {
   HostListener,
   Input,
   Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Node, Schema } from 'prosemirror-model';
@@ -26,7 +27,7 @@ import {
   STRIKETHROUGH,
 } from '../../builtins/input-rules/regexExp';
 import { markInputRule } from '../../builtins/input-rules';
-import { hoverPlugin } from '../../builtins/plugins';
+import { clickPlugin, hoverPlugin } from '../../builtins/plugins';
 import { TraakConfiguration } from '../../../types/traakConfiguration';
 import { TraakNode } from '../../../types/traakNode';
 
@@ -35,7 +36,8 @@ import { TraakNode } from '../../../types/traakNode';
   standalone: true,
   imports: [],
   template: ` <div #editor test-id="editor"></div> `,
-  styles: '',
+  styleUrls: ['./traak-editor.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TraakEditorComponent implements AfterViewInit {
   @ViewChild('editor') editor?: ElementRef;
@@ -43,9 +45,11 @@ export class TraakEditorComponent implements AfterViewInit {
   @Output() transactionEvent = new EventEmitter<Transaction>();
   @Output() nodeHoverEvent = new EventEmitter();
   @Output() nodeOutEvent = new EventEmitter();
+  @Output() nodeClickEvent = new EventEmitter();
   @Input() config?: TraakConfiguration;
 
   constructor() {}
+
   initializeEditor(): void {
     if (this.config) {
       const schema = this.initializeSchema(this.config);
@@ -72,6 +76,7 @@ export class TraakEditorComponent implements AfterViewInit {
           this.viewEvent.emit(view);
         },
         plugins: [
+          clickPlugin,
           hoverPlugin,
           keymap({
             Enter: basicTraakAddCommands,
@@ -117,5 +122,10 @@ export class TraakEditorComponent implements AfterViewInit {
   @HostListener('nodeOut', ['$event'])
   handleNodeOut($event: CustomEvent) {
     this.nodeOutEvent.emit($event);
+  }
+
+  @HostListener('nodeClick', ['$event'])
+  handleNodeClick($event: CustomEvent) {
+    this.nodeClickEvent.emit($event);
   }
 }
