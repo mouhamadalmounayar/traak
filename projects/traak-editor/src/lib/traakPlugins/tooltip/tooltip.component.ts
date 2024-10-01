@@ -5,9 +5,6 @@ import { NgClass, NgIf, NgOptimizedImage, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { hasMark } from '../../utils';
 import { TraakPlugin } from '../TraakPlugin';
-import { Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import { Coordinates } from '../../../types/traakConfiguration';
 import { appear } from '../../animations/appear';
 import { InputContainerComponent } from './input-container/input-container.component';
 
@@ -30,14 +27,6 @@ import { InputContainerComponent } from './input-container/input-container.compo
   styleUrl: './tooltip.component.css',
 })
 export class ToolTipComponent extends TraakPlugin {
-  view?: EditorView;
-
-  currentTransaction?: Transaction;
-
-  coordinates?: Coordinates;
-
-  isPluginVisible: boolean = false;
-
   updatePlugin(): void {
     this.positionToolTip();
     this.updateMarks();

@@ -1,43 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-/*prosemirror*/
-.ProseMirror:focus {
-  outline: none;
-}
-
-.ProseMirror {
-  font-family: "Segoe UI Regular", sans-serif !important;
-  font-size: 13px !important;
-  color: #3c3c3c;
-  width: 50vw;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.line-node {
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  position: relative;
-}
-
-.empty {
-  display: none;
-  opacity: 0;
-}
-
-code {
-  background-color: rgb(241 245 249);
-  padding: 6px 5px 4px;
-  font-size: 8px;
-  border-radius: 3px;
-}
-
-a {
-  cursor: pointer;
-}
-
 @font-face {
   font-family: "Inter Regular";
   src: url("./assets/fonts/Inter/static/Inter-Regular.ttf") format("opentype");

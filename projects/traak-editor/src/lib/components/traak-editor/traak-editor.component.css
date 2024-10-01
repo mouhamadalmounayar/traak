@@ -1,0 +1,52 @@
+.ProseMirror:focus {
+  outline: none;
+}
+
+.ProseMirror {
+  font-family: "Segoe UI Regular", sans-serif !important;
+  font-size: 13px !important;
+  color: #3c3c3c;
+  width: 50vw;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.line-node {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  position: relative;
+}
+
+p {
+  margin: 5px;
+}
+
+.empty {
+  display: none;
+  opacity: 0;
+}
+
+code {
+  background-color: rgb(241 245 249);
+  padding: 6px 5px 4px;
+  font-size: 8px;
+  border-radius: 3px;
+}
+
+a {
+  cursor: pointer;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+}
+
+
+.task-checkbox {
+  border : 0.5px solid var(--border-color);
+}

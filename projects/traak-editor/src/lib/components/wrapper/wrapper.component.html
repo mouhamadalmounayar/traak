@@ -6,6 +6,7 @@
   (viewEvent)="getView($event)"
   [config]="this.config"
   (nodeHoverEvent)="handleNodeHover($event)"
-  (nodeOutEvent)="handleNodeOut()"
+  (nodeOutEvent)="handleNodeOut($event)"
+  (nodeClickEvent)="handleNodeClick($event)"
 >
 </lib-traak-editor>
