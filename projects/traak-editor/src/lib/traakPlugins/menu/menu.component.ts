@@ -1,18 +1,22 @@
 import { Component, OnInit, forwardRef } from '@angular/core';
 import { NgIf, NgStyle, NgClass } from '@angular/common';
-import { EditorView } from 'prosemirror-view';
 import {
   addOrderedList,
   addBulletList,
   addLine,
+  addTaskList,
 } from '../../builtins/commands';
 import { Node } from 'prosemirror-model';
-import { TextSelection, Transaction } from 'prosemirror-state';
+import { TextSelection } from 'prosemirror-state';
 import { TraakPlugin } from '../TraakPlugin';
-import { Coordinates } from '../../../types/traakConfiguration';
 import { AddButtonComponent } from './add-button/add-button.component';
-import { NodeService } from '../../services/node.service';
 import { appear } from '../../animations/appear';
+import {
+  HoverEventDetails,
+  OutEventDetails,
+} from '../../../types/traakConfiguration';
+import { HoverService } from '../../services/hover.service';
+import { OutService } from '../../services/out.service';
 
 @Component({
   selector: 'block-menu',
@@ -26,19 +30,18 @@ import { appear } from '../../animations/appear';
   ],
 })
 export class MenuComponent extends TraakPlugin implements OnInit {
-  currentTransaction?: Transaction | undefined;
-  view?: EditorView;
   node?: Node;
   start?: number;
-  isPluginVisible: boolean = false;
-  coordinates?: Coordinates;
 
   updatePlugin(): void {}
 
   isHoveringNode: boolean = false;
   isHoveringButton: boolean = false;
 
-  constructor(private _nodeService: NodeService) {
+  constructor(
+    private _hoverEventService: HoverService,
+    private _outEventService: OutService,
+  ) {
     super();
   }
 
@@ -50,7 +53,7 @@ export class MenuComponent extends TraakPlugin implements OnInit {
   }
 
   ngOnInit(): void {
-    this._nodeService.hover$.subscribe((details) => {
+    this._hoverEventService.event$.subscribe((details: HoverEventDetails) => {
       if (details) {
         this.coordinates = details.dims;
         this.node = details.node;
@@ -58,9 +61,8 @@ export class MenuComponent extends TraakPlugin implements OnInit {
       }
       this.isHoveringNode = true;
     });
-
-    this._nodeService.out$.subscribe(() => {
-      this.isHoveringNode = false;
+    this._outEventService.event$.subscribe((details: OutEventDetails) => {
+      if (details.event === 'out') this.isHoveringNode = false;
     });
   }
 
@@ -118,5 +120,13 @@ export class MenuComponent extends TraakPlugin implements OnInit {
       this.view.focus();
     }
     this.hideMenu();
+  }
+
+  addTaskList($event: MouseEvent) {
+    $event.preventDefault();
+    if (this.view) {
+      this.setCursorToEndOfLine();
+      addTaskList(this.view.state, this.view.dispatch);
+    }
   }
 }

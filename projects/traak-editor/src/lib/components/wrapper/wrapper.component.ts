@@ -17,10 +17,12 @@ import { TraakConfiguration } from '../../../types/traakConfiguration';
 import { TraakPlugin } from '../../traakPlugins/TraakPlugin';
 import { ToolTipComponent } from '../../traakPlugins/tooltip/tooltip.component';
 import { validate } from '../../validations/validate';
-import { NodeService } from '../../services/node.service';
+import { HoverService } from '../../services/hover.service';
+import { ClickService } from '../../services/click.service';
+import { OutService } from '../../services/out.service';
 
 @Component({
-  selector: 'lib-wrapper',
+  selector: 'wrapper',
   imports: [
     TraakEditorComponent,
     ToolTipComponent,
@@ -43,7 +45,9 @@ export class WrapperComponent implements OnInit {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private _nodeService: NodeService,
+    private _hoverEventService: HoverService,
+    private _clickEventService: ClickService,
+    private _outEventService: OutService,
   ) {}
 
   ngOnInit() {
@@ -55,6 +59,7 @@ export class WrapperComponent implements OnInit {
     const plugins = this.signals();
     plugins.forEach((plugin: TraakPlugin) => {
       plugin.view = view;
+      plugin.manager.updateView(view);
       plugin.updatePlugin();
     });
     this.cdr.detectChanges();
@@ -71,10 +76,14 @@ export class WrapperComponent implements OnInit {
   }
 
   handleNodeHover($event: CustomEvent) {
-    this._nodeService.sendHoverDetails($event.detail);
+    this._hoverEventService.sendDetails($event.detail);
   }
 
-  handleNodeOut() {
-    this._nodeService.sendEvent();
+  handleNodeOut($event: CustomEvent) {
+    this._outEventService.sendDetails($event.detail);
+  }
+
+  handleNodeClick($event: CustomEvent) {
+    this._clickEventService.sendDetails($event.detail);
   }
 }
