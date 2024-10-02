@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { ToolTipComponent } from '../../lib/traakPlugins/tooltip/tooltip.component';
+import { ToolTipComponent } from '../../lib/traak-plugins/tooltip/tooltip.component';
 
 describe('tootltip', () => {
   let component: ToolTipComponent;

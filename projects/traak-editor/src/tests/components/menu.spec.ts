@@ -1,4 +1,4 @@
-import { MenuComponent } from '../../lib/traakPlugins/menu/menu.component';
+import { MenuComponent } from '../../lib/traak-plugins/menu/menu.component';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { builders, eq } from 'prosemirror-test-builder';
 import { traakSchema } from '../../lib/builtins/schemas';

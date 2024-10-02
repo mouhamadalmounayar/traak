@@ -6,8 +6,8 @@ export * from './lib/components/wrapper/wrapper.component';
 /*
  plugins
  */
-export * from './lib/traakPlugins/tooltip/tooltip.component';
-export * from './lib/traakPlugins/menu/menu.component';
+export * from './lib/traak-plugins/tooltip/tooltip.component';
+export * from './lib/traak-plugins/menu/menu.component';
 
 /*
  types
