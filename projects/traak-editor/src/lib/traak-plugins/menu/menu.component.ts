@@ -78,7 +78,7 @@ export class MenuComponent extends TraakPlugin implements OnInit {
       this.isHoveringNode = true;
     });
     this._outEventService.event$.subscribe((details: OutEventDetails) => {
-      if (details.event === 'out') this.isHoveringNode = false;
+      if (details && details.event === 'out') this.isHoveringNode = false;
     });
     this.initializeConfig(this.config);
   }
