@@ -19,13 +19,18 @@ export class TraakManager {
     return $from;
   }
 
+  /**
+   *
+   * @returns the current node type as a string
+   */
   getNodeType(): string {
     const $nodePos = this.getResolvedPos();
     return $nodePos.parent.type.name;
   }
 
   /**
-   * Returns the current node.
+   *
+   * @returns the node object on which the cursor is at
    */
   getNode() {
     const $nodePos = this.getResolvedPos();
@@ -33,7 +38,8 @@ export class TraakManager {
   }
 
   /**
-   * Returns the text content of the current node.
+   *
+   * @returns the text content on which cursor is at
    */
   getTextContent(): string {
     const $nodePos = this.getResolvedPos();
@@ -41,7 +47,8 @@ export class TraakManager {
   }
 
   /**
-   * Returns true if the node is empty, false otherwise.
+   *
+   * @returns true if the node on which the cursor is at is empty
    */
   isNodeEmpty(): boolean {
     const $nodePos = this.getResolvedPos();
@@ -49,7 +56,8 @@ export class TraakManager {
   }
 
   /**
-   * Returns true if the cursor is at the start of the current node.
+   *
+   * @returns true if cursor at the beginning of the node it is currently pointing at
    */
   isCursorAtStartOfNode(): boolean {
     const $nodePos = this.getResolvedPos();
@@ -73,7 +81,8 @@ export class TraakManager {
   }
 
   /**
-   * Returns the coordinates of the current position in the document.
+   *
+   * @returns the coordinates of the node on which the cursor is at.
    */
   getSelectionCoords() {
     if (!this.view) {
@@ -84,7 +93,8 @@ export class TraakManager {
   }
 
   /**
-   * Adds a node at the current selection.
+   * Dispatches a transaction that adds a node to the document
+   * @param tree a traakTree that represent the node and its content
    */
   addNode(tree: Tree) {
     if (!this.view) {
