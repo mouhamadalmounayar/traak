@@ -6,6 +6,14 @@ import { createState, createView, select } from '../__utils__';
 import { EditorState } from 'prosemirror-state';
 import ist from 'ist';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  BulletList,
+  ListItem,
+  OrderedList,
+  Line,
+  TaskCheckbox,
+  TaskList,
+} from '../../lib/nodes ';
 const traakBuilders = builders(traakSchema);
 const doc = traakBuilders.doc(
   traakBuilders.doc_title('Page title'),
@@ -24,6 +32,12 @@ describe('MenuComponent', () => {
     fixture = TestBed.createComponent(MenuComponent);
     component = fixture.componentInstance;
     component.isPluginVisible = true;
+    component.config = {
+      styles: {
+        'inject-css': true,
+      },
+      nodes: [ListItem, BulletList, OrderedList, TaskCheckbox, TaskList, Line],
+    };
     component.coordinates = { top: 0, left: 0, right: 0, bottom: 0 };
     state = createState(doc);
     fixture.detectChanges();

@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef } from '@angular/core';
+import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { NgIf, NgStyle, NgClass } from '@angular/common';
 import {
   addOrderedList,
@@ -14,9 +14,12 @@ import { appear } from '../../animations/appear';
 import {
   HoverEventDetails,
   OutEventDetails,
-} from '../../../types/traakConfiguration';
+} from '../../../types/traak-configuration';
 import { HoverService } from '../../services/hover.service';
 import { OutService } from '../../services/out.service';
+import { Menu } from '../../../types/plugin-config/menu';
+import { TraakNode } from '../../../types/traak-node';
+import { findNodeByName } from '../../utils';
 
 @Component({
   selector: 'block-menu',
@@ -32,6 +35,8 @@ import { OutService } from '../../services/out.service';
 export class MenuComponent extends TraakPlugin implements OnInit {
   node?: Node;
   start?: number;
+  nodes: TraakNode[];
+  @Input() config: Menu;
 
   updatePlugin(): void {}
 
@@ -45,11 +50,22 @@ export class MenuComponent extends TraakPlugin implements OnInit {
     super();
   }
 
-  get classes() {
+  get buttonClasses() {
     return {
       'add-button__visible': this.isHoveringNode || this.isHoveringButton,
       'add-button__hidden': !this.isHoveringNode && !this.isHoveringButton,
     };
+  }
+
+  get classes() {
+    const classes = [];
+    if (this.class) {
+      classes.push(this.class);
+    }
+    if (this.injectCss) {
+      classes.push('menu-container');
+    }
+    return classes;
   }
 
   ngOnInit(): void {
@@ -64,6 +80,12 @@ export class MenuComponent extends TraakPlugin implements OnInit {
     this._outEventService.event$.subscribe((details: OutEventDetails) => {
       if (details.event === 'out') this.isHoveringNode = false;
     });
+    this.initializeConfig(this.config);
+  }
+
+  override initializeConfig(config: Menu): void {
+    super.initializeConfig(config);
+    this.nodes = config.nodes;
   }
 
   setCursorToEndOfLine() {
@@ -129,4 +151,6 @@ export class MenuComponent extends TraakPlugin implements OnInit {
       addTaskList(this.view.state, this.view.dispatch);
     }
   }
+
+  protected readonly findNodeByName = findNodeByName;
 }

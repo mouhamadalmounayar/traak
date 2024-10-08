@@ -13,10 +13,10 @@ import { TraakEditorComponent } from '../traak-editor/traak-editor.component';
 import { NgClass, NgIf, NgStyle } from '@angular/common';
 import { MenuComponent } from '../../traak-plugins/menu/menu.component';
 import { Node } from 'prosemirror-model';
-import { TraakConfiguration } from '../../../types/traakConfiguration';
+import { TraakConfiguration } from '../../../types/traak-configuration';
 import { TraakPlugin } from '../../traak-plugins/TraakPlugin';
 import { ToolTipComponent } from '../../traak-plugins/tooltip/tooltip.component';
-import { validate } from '../../validations/validate';
+import { validateGlobalConfig } from '../../validations/validate';
 import { HoverService } from '../../services/hover.service';
 import { ClickService } from '../../services/click.service';
 import { OutService } from '../../services/out.service';
@@ -51,7 +51,7 @@ export class WrapperComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    validate(this.config);
+    validateGlobalConfig(this.config);
   }
 
   getView(view: EditorView) {

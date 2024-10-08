@@ -2,11 +2,6 @@ import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { chainCommands } from 'prosemirror-commands';
 import { ResolvedPos, Node } from 'prosemirror-model';
 import { Tree } from '../../../types/tree';
-import { traakSchema } from '../schemas';
-
-/*
- * utilities
- */
 
 const isCursorAtTheBeginningOfNode = ($pos: ResolvedPos): boolean => {
   return $pos.pos === $pos.before() + 1;
@@ -49,17 +44,18 @@ export function addLine(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  return addNode(state, dispatch, new Tree('line', traakSchema));
+  const { schema } = state;
+  return addNode(state, dispatch, new Tree('line', schema));
 }
 
 export function addListItem(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  const { selection } = state;
+  const { selection, schema } = state;
   const { $from } = selection;
   if ($from.parent.type.name === 'list_item')
-    return addNode(state, dispatch, new Tree('list_item', traakSchema));
+    return addNode(state, dispatch, new Tree('list_item', schema));
   return false;
 }
 
@@ -67,10 +63,11 @@ export function addOrderedList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
+  const { schema } = state;
   return addNode(
     state,
     dispatch,
-    new Tree('ordered_list', traakSchema, new Tree('list_item', traakSchema)),
+    new Tree('ordered_list', schema, new Tree('list_item', schema)),
   );
 }
 
@@ -78,10 +75,11 @@ export function addBulletList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
+  const { schema } = state;
   return addNode(
     state,
     dispatch,
-    new Tree('bullet_list', traakSchema, new Tree('list_item', traakSchema)),
+    new Tree('bullet_list', schema, new Tree('list_item', schema)),
   );
 }
 
@@ -89,14 +87,15 @@ export function addTaskList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
+  const { schema } = state;
   return addNode(
     state,
     dispatch,
     new Tree(
       'task_list',
-      traakSchema,
-      new Tree('task_checkbox', traakSchema),
-      new Tree('line', traakSchema),
+      schema,
+      new Tree('task_checkbox', schema),
+      new Tree('line', schema),
     ),
   );
 }
@@ -211,14 +210,14 @@ export function removeTaskList(
   state: EditorState,
   dispatch: ((tr: Transaction) => void) | undefined,
 ) {
-  const { selection } = state;
+  const { selection, schema } = state;
   const { $from } = selection;
   if (
     $from.node(1).type.name === 'task_list' &&
     isCursorAtTheBeginningOfNode($from)
   ) {
     // to do replace with line containing text content.
-    return replaceWithNode(state, dispatch, new Tree('line', traakSchema));
+    return replaceWithNode(state, dispatch, new Tree('line', schema));
   }
   return false;
 }

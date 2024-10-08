@@ -28,8 +28,8 @@ import {
 } from '../../builtins/input-rules/regexExp';
 import { markInputRule } from '../../builtins/input-rules';
 import { clickPlugin, hoverPlugin } from '../../builtins/plugins';
-import { TraakConfiguration } from '../../../types/traakConfiguration';
-import { TraakNode } from '../../../types/traakNode';
+import { TraakConfiguration } from '../../../types/traak-configuration';
+import { TraakNode } from '../../../types/traak-node';
 
 @Component({
   selector: 'lib-traak-editor',
@@ -102,6 +102,7 @@ export class TraakEditorComponent implements AfterViewInit {
         return acc;
       }, baseSchema);
     }
+    schema = traakSchema;
     return schema;
   }
 

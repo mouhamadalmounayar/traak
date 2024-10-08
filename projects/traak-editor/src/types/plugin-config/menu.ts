@@ -1,6 +1,6 @@
-import { TraakNode } from './traakNode';
+import { TraakNode } from '../traak-node';
+import { PluginConfig } from './plugin-config';
 
-export interface MenuConfiguration {
+export interface Menu extends PluginConfig {
   nodes: TraakNode[];
-  css: string;
 }

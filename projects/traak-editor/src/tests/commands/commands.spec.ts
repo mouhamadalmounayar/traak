@@ -35,12 +35,8 @@ describe('basicTraakAddCommands', () => {
     };
   });
   it('should add a line to the document', async () => {
-    const doc = traakBuilders.doc(
-      traakBuilders.doc_title('Page title'),
-      traakBuilders.line('Hello from traak<a>'),
-    );
+    const doc = traakBuilders.doc(traakBuilders.line('Hello from traak<a>'));
     const expectedResult = traakBuilders.doc(
-      traakBuilders.doc_title('Page title'),
       traakBuilders.line('Hello from traak'),
       traakBuilders.line('<a>'),
     );
