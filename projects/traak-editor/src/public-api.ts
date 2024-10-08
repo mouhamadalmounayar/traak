@@ -12,10 +12,16 @@ export * from './lib/traak-plugins/menu/menu.component';
 /*
  types
  */
-export * from './types/traakNode';
-export * from './types/traakConfiguration';
+export * from './types/traak-node';
+export * from './types/traak-configuration';
+export * from './types/plugin-config/menu';
 
 /*
  utilities
  */
 export * from './lib/utilities';
+
+/*
+  Nodes
+ */
+export * from './lib/nodes ';
