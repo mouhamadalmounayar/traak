@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HoverEventDetails } from '../../types/traakConfiguration';
+import { HoverEventDetails } from '../../types/traak-configuration';
 import { EventService } from './event.service';
 
 @Injectable({
