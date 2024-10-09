@@ -12,7 +12,7 @@ export const traakSchema = new Schema({
     },
     task_checkbox: {
       attrs: { checked: { default: 'false' } },
-      selectable: true,
+      selectable: false,
       group: 'block',
       toDOM(node) {
         if (node.attrs['checked'] === 'true') {
