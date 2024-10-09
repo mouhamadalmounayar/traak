@@ -2,9 +2,8 @@ import { builders, eq } from 'prosemirror-test-builder';
 import { traakSchema } from '../../lib/builtins/schemas';
 import { Node } from 'prosemirror-model';
 import ist from 'ist';
-import { Command, EditorState, Transaction } from 'prosemirror-state';
+import { Command, Transaction } from 'prosemirror-state';
 import {
-  addList,
   addLine,
   addLineFromTitle,
   defaultRemove,
@@ -12,6 +11,10 @@ import {
   joinTwoLines,
   removeLineNode,
   removeSelection,
+  addOrderedList,
+  addBulletList,
+  addTaskList,
+  removeTaskList,
 } from '../../lib/builtins/commands';
 import { createState, getTagObject, select } from '../__utils__';
 
@@ -25,15 +28,6 @@ const apply = (doc: Node, command: Command, result?: Node) => {
 const traakBuilders = builders(traakSchema);
 
 describe('basicTraakAddCommands', () => {
-  let addBulletList: Command;
-  beforeEach(() => {
-    addBulletList = (
-      state: EditorState,
-      dispatch: ((tr: Transaction) => void) | undefined,
-    ) => {
-      return addList('bullet_list', state, dispatch);
-    };
-  });
   it('should add a line to the document', async () => {
     const doc = traakBuilders.doc(traakBuilders.line('Hello from traak<a>'));
     const expectedResult = traakBuilders.doc(
@@ -70,6 +64,25 @@ describe('basicTraakAddCommands', () => {
       traakBuilders.bullet_list(traakBuilders.list_item()),
     );
     apply(doc, addBulletList, expectedResult);
+  });
+  it('should add an ordered list to the doc', async () => {
+    const doc = traakBuilders.doc(traakBuilders.line('Hello from traak<a>'));
+    const expectedResult = traakBuilders.doc(
+      traakBuilders.line('Hello from traak'),
+      traakBuilders.ordered_list(traakBuilders.list_item()),
+    );
+    apply(doc, addOrderedList, expectedResult);
+  });
+  it('should an a task list to the doc', async () => {
+    const doc = traakBuilders.doc(traakBuilders.line('Hello from traak<a>'));
+    const expectedResult = traakBuilders.doc(
+      traakBuilders.line('Hello from traak'),
+      traakBuilders.task_list(
+        traakBuilders.task_checkbox(),
+        traakBuilders.line(),
+      ),
+    );
+    apply(doc, addTaskList, expectedResult);
   });
 });
 
@@ -145,7 +158,7 @@ describe('basicTraakRemoveCommands', () => {
     apply(doc, exitList, expectedResult);
   });
 
-  it('shoud remove selection from the document', async () => {
+  it('should remove selection from the document', async () => {
     const doc = traakBuilders.doc(
       traakBuilders.doc_title('Page title'),
       traakBuilders.line('<a>Hello from<b> traak'),
@@ -155,5 +168,20 @@ describe('basicTraakRemoveCommands', () => {
       traakBuilders.line(' traak'),
     );
     apply(doc, removeSelection, expectedResult);
+  });
+
+  it('should replace a task item with an empty line from the document', async () => {
+    const doc = traakBuilders.doc(
+      traakBuilders.line('Hello from traak'),
+      traakBuilders.task_list(
+        traakBuilders.task_checkbox(),
+        traakBuilders.line('<a>'),
+      ),
+    );
+    const expectedResult = traakBuilders.doc(
+      traakBuilders.line('Hello from traak'),
+      traakBuilders.line(),
+    );
+    apply(doc, removeTaskList, expectedResult);
   });
 });
